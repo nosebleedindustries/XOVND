@@ -127,8 +127,19 @@ export function SiteFooter() {
 }
 
 // ─── CartDrawer ─────────────────────────────────────────────────────────
+// Phase 2A: the local cart is mostly decorative; every BUY button on
+// /clvster routes straight to Moonbase hosted checkout. The Checkout
+// button here is a fallback for users who interact with the cart UI
+// directly — it sends them to the same Moonbase URL. Phase 2B builds
+// a real multi-product cart against the Moonbase Cart API.
+const MOONBASE_CHECKOUT = 'https://xound.moonbase.sh/buy/clvster';
+
 export function CartDrawer({ open, onClose, items, onRemove }) {
   const subtotal = items.reduce((s, x) => s + (x.sale || x.price), 0);
+  const onCheckout = () => {
+    if (items.length === 0) return;
+    window.open(MOONBASE_CHECKOUT, '_blank', 'noopener,noreferrer');
+  };
   return (
     <>
       <div className={'cart-overlay' + (open ? ' open' : '')} onClick={onClose}></div>
@@ -170,6 +181,7 @@ export function CartDrawer({ open, onClose, items, onRemove }) {
           <button
             className="checkout-btn"
             disabled={items.length === 0}
+            onClick={onCheckout}
             style={{ opacity: items.length ? 1 : 0.4 }}
           >
             <span>Checkout</span>
