@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Fragment } from 'react';
 
 // ─── Marquee ────────────────────────────────────────────────────────────
 export function Marquee() {
@@ -13,14 +13,14 @@ export function Marquee() {
     <div className="announce">
       <div className="announce-track">
         {[...Array(4)].map((_, k) => (
-          <span key={k} style={{ display: 'contents' }}>
+          <Fragment key={k}>
             {items.map((t, i) => (
-              <span key={`${k}-${i}`} style={{ display: 'contents' }}>
+              <Fragment key={`${k}-${i}`}>
                 <span>{t}</span>
                 <span className="dot"></span>
-              </span>
+              </Fragment>
             ))}
-          </span>
+          </Fragment>
         ))}
       </div>
     </div>
