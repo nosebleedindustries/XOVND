@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 
 
@@ -144,7 +144,7 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
       <div className="announce" aria-label="Announcement">
         <div className="announce-track">
           {[...Array(2)].map((_, k) =>
-          <React.Fragment key={k}>
+          <Fragment key={k}>
               <span>NEW! CLVSTER CHAIN SEQUENCER</span><span className="dot"></span>
               <span>VST3 · AU · AAX</span><span className="dot"></span>
               <span>WIN & MAC (UPCOMING)</span><span className="dot"></span>
@@ -153,7 +153,7 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
               <span>VST3 · AU · AAX</span><span className="dot"></span>
               <span>WIN & MAC (UPCOMING)</span><span className="dot"></span>
               <span>FREE 14-DAY TRIAL</span><span className="dot"></span>
-            </React.Fragment>
+            </Fragment>
           )}
         </div>
       </div>
@@ -193,11 +193,11 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
    so the CLVSTER logo and plugin photo stay the visual focus. */
 
 function HeroGenArt() {
-  const canvasRef = React.useRef(null);
-  const wrapRef = React.useRef(null);
-  const [params, setParams] = React.useState({ n: 5, marg: 12, amp: 4 });
+  const canvasRef = useRef(null);
+  const wrapRef = useRef(null);
+  const [params, setParams] = useState({ n: 5, marg: 12, amp: 4 });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -388,14 +388,14 @@ function HeroGenArt() {
   }, []);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <canvas ref={canvasRef} className="hero-genart" aria-hidden="true" />
       <div className="hero-genart-readout" aria-hidden="true">
         <span>n <b>{params.n}</b></span>
         <span>marg <b>{params.marg}</b></span>
         <span>amp <b>{params.amp}</b></span>
       </div>
-    </React.Fragment>);
+    </Fragment>);
 
 }
 

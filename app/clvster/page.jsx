@@ -296,7 +296,7 @@ function ProductCarousel() {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <div
         className={"product-img" + (dragOver ? " drag-over" : "")}
         onDragOver={onDragOver}
@@ -335,7 +335,7 @@ function ProductCarousel() {
         </div>
 
         {photos.length > 1 &&
-        <React.Fragment>
+        <Fragment>
             <button className="car-nav prev" onClick={() => go(-1)} aria-label="Previous">‹</button>
             <button className="car-nav next" onClick={() => go(1)} aria-label="Next">›</button>
             <div className="car-dots">
@@ -343,7 +343,7 @@ function ProductCarousel() {
             <span key={i} className={"dot" + (i === idx ? " active" : "")} onClick={() => setIdx(i)}></span>
             )}
             </div>
-          </React.Fragment>
+          </Fragment>
         }
 
         <div className="corner">{PRODUCT.saleLabel}</div>
@@ -373,7 +373,7 @@ function ProductCarousel() {
         <input ref={folderRef} type="file" accept="image/*,video/*" multiple onChange={onPickFolder} webkitdirectory="" directory="" />
         <input ref={replaceRef} type="file" accept="image/*,video/*" onChange={onReplaceFile} />
       </div>
-    </React.Fragment>);
+    </Fragment>);
 
 }
 
@@ -775,7 +775,7 @@ function Pricing({ onBuy }) {
 function App() {
   const { cart, cartOpen, openCart, closeCart, addToCart, removeAt, toast } = useCart();
   const auth = useAuth ? useAuth() : { user: null, login: () => {}, logout: () => {} };
-  const [loginOpen, setLoginOpen] = React.useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   // Phase 2A: Buy buttons route straight to Moonbase hosted checkout —
   // they handle MoR, VAT, localised currency, card forms. The local cart
   // UI stays in the codebase for Phase 2B (multi-product cart + custom
