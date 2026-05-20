@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>CLVSTER — Hero Module</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     CLVSTER hero module — standalone drop-in for a JUCE WebView.
+     One file: generative background canvas + glitching logo +
+     overlapping "CLUSTER CHAIN SEQUENCER" tagline + plugin photo.
+
+     To embed in JUCE: serve this file (and clvster-logo.jpg +
+     clvster-ui.png) to the WebBrowserComponent. See README.md.
+     ============================================================ */
+
+  :root {
+    --yellow: #E8D60E;
+    --black:  #000;
+    --white:  #F4F1E8;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--black); color: var(--white);
+    font-family: 'Space Mono', ui-monospace, monospace;
+    -webkit-font-smoothing: antialiased;
+    height: 100%; overflow: hidden;
+  }
+
+  /* The hero panel fills the window. Resize by parent <iframe>/JUCE component. */
+  .hero-right {
+    position: relative;
+    width: 100%; height: 100vh; min-height: 360px;
+    background:
+      radial-gradient(circle at 50% 50%, #221f19 0%, var(--black) 70%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    gap: 10px;
+    padding: 40px 16px 48px;
+    overflow: hidden;
+  }
+
+  /* Vignette ramp pushes the corners darker so the logo + photo pop. */
+  .hero-right::after {
+    content: ""; position: absolute; inset: 0;
+    z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 48%,
+        transparent 28%,
+        rgba(0,0,0,0.55) 72%,
+        rgba(0,0,0,0.85) 100%);
+  }
+
+  /* ----- generative-art background canvas ----- */
+  .hero-genart {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0; display: block;
+    pointer-events: none;
+  }
+
+  /* Live param readout (top-left). Remove the <div> in markup if not wanted. */
+  .hero-genart-readout {
+    position: absolute; top: 16px; left: 18px;
+    display: flex; gap: 12px; z-index: 3;
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #6a6557; pointer-events: none;
+  }
+  .hero-genart-readout span {
+    display: inline-flex; align-items: baseline; gap: 5px;
+    padding: 4px 8px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #2a2722;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-genart-readout b {
+    color: var(--yellow); font-weight: 700;
+  }
+
+  /* ----- CLVSTER logo (white glitch) ----- */
+  .hero-logo {
+    width: min(86%, 720px);
+    height: auto; display: block;
+    /* mix-blend-mode: screen punches the logo to white against the dark bg */
+    mix-blend-mode: screen;
+    position: relative; z-index: 2;
+    animation: clvsterGlitch 4.6s steps(1, end) infinite;
+    will-change: filter, transform, opacity;
+  }
+
+  /* ----- "CLUSTER CHAIN SEQUENCER" overlapping bottom of logo ----- */
+  .hero-tagline {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--yellow);
+    font-size: clamp(14px, 1.4vw, 22px);
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    text-align: center;
+    margin: -57px 0 0;            /* overlap into bottom of logo bbox */
+    z-index: 2; position: relative;
+    text-shadow:
+      0 0 6px  rgba(232,214,14,0.55),
+      0 0 14px rgba(232,214,14,0.25);
+  }
+
+  /* ----- plugin UI screenshot ----- */
+  .hero-mark.hero-ui {
+    width: min(106%, 1180px);
+    margin: 4px -3% 0;
+    border: 1px solid #2a2722;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.7),
+      0 0 0 1px rgba(232,214,14,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative; z-index: 2;
+    animation: floaty 7s ease-in-out infinite;
+  }
+  .hero-mark.hero-ui img { width: 100%; height: auto; display: block; }
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50%      { transform: translateY(-12px) rotate(1deg); }
+  }
+
+  /* ----- the glitch keyframes (held white, sub-pixel jitter, slice-tears) ----- */
+  @keyframes clvsterGlitch {
+    0%, 14%    { filter: saturate(0) brightness(2.6) contrast(1.4); transform: none; opacity: 1; }
+    15%        { filter: saturate(0) brightness(2.6) contrast(1.4); transform: translate(-2px, 1px) skewX(-2deg); }
+    16%        { transform: translate(2px, -1px) skewX(2deg); }
+    17%        { transform: translate(-1px, 0); }
+    18%, 36%   { transform: none; filter: saturate(0) brightness(2.8) contrast(1.5); }
+    37%        { opacity: 0.18; filter: saturate(0) brightness(0.6); }
+    38%        { opacity: 1;    filter: saturate(0) brightness(3); }
+    39%, 58%   { filter: saturate(0) brightness(2.6) contrast(1.4); }
+    59%        { transform: translate(3px, 0) skewX(-4deg);  filter: saturate(0) brightness(2.8) contrast(1.6); clip-path: inset(40% 0 30% 0); }
+    60%        { transform: translate(-3px, 0) skewX(3deg);  clip-path: inset(10% 0 60% 0); }
+    61%        { transform: none; clip-path: none; }
+    62%, 78%   { filter: saturate(0) brightness(2.4) contrast(1.4); }
+    79%        { opacity: 0; }
+    80%        { opacity: 1; filter: saturate(0) brightness(3.2); }
+    81%        { opacity: 0.4; }
+    82%, 94%   { opacity: 1; filter: saturate(0) brightness(2.6); }
+    95%        { transform: translate(2px, -1px); filter: saturate(0) brightness(2.8); }
+    96%        { transform: translate(-2px, 1px); }
+    97%, 100%  { transform: none; filter: saturate(0) brightness(2.6) contrast(1.4); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero-right">
+
+  <!-- generative-art background -->
+  <canvas id="genart" class="hero-genart" aria-hidden="true"></canvas>
+
+  <!-- live readout of the 3 animated params (delete this block if unwanted) -->
+  <div class="hero-genart-readout" aria-hidden="true">
+    <span>n    <b id="ro-n">5</b></span>
+    <span>marg <b id="ro-m">12</b></span>
+    <span>amp  <b id="ro-a">4.0</b></span>
+  </div>
+
+  <!-- CLVSTER logo with white glitch treatment -->
+  <img class="hero-logo" src="clvster-logo.jpg" alt="CLVSTER" />
+
+  <!-- yellow tagline, pulled up to overlap bottom of the logo -->
+  <div class="hero-tagline">Cluster Chain Sequencer</div>
+
+  <!-- plugin UI photo -->
+  <div class="hero-mark hero-ui">
+    <img src="clvster-ui.png" alt="CLVSTER plugin UI" />
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Generative-art background — port of the p5 sketch.
+   A grid of n×n cells, each rendered with one of 5 primitives:
+     0 rect_wiggle_x_lines   (vertical lines, sinusoidal x-jitter)
+     1 rect_wiggle_lines     (horizontal lines, sinusoidal y-jitter)
+     2 rect_lines            (flat hatching)
+     3 rect_backforth_lines  (zigzag boustrophedon)
+     4 rect_noise            (pointillist dust)
+   Three params (n, marg, amp) reroll every epoch and morph
+   between values with an eased lerp. Palette locked to grays.
+   ============================================================ */
+(function () {
+  const canvas  = document.getElementById('genart');
+  const ctx     = canvas.getContext('2d');
+  const elN     = document.getElementById('ro-n');
+  const elM     = document.getElementById('ro-m');
+  const elA     = document.getElementById('ro-a');
+
+  const STROKES = ["#3a3a3a", "#4a4a4a", "#5a5a5a", "#6a6a6a"];
+  const EPOCH_MS = 2800;
+  const TRANS_MS = 1400;
+
+  function resize () {
+    const r = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width  = Math.max(1, Math.floor(r.width  * dpr));
+    canvas.height = Math.max(1, Math.floor(r.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function pickTarget () {
+    return {
+      n:    3 + Math.floor(Math.random() * 7),   // 3..9
+      marg: 4 + Math.random() * 26,              // 4..30
+      amp:  1.5 + Math.random() * 9,             // 1.5..10.5
+    };
+  }
+  function mulberry32 (a) {
+    return function () {
+      let t = (a += 0x6d2b79f5);
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const ease = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+  /* --- primitives --- */
+  function rectLines (ctx, x, y, w, h, rng) {
+    const step = 3 + rng() * 4;
+    ctx.lineWidth = 1;
+    for (let yy = y + step / 2; yy < y + h; yy += step) {
+      ctx.beginPath();
+      ctx.moveTo(x, yy); ctx.lineTo(x + w, yy);
+      ctx.stroke();
+    }
+  }
+  function rectWiggleLines (ctx, x, y, w, h, rng, amp) {
+    const step  = 4 + rng() * 5;
+    const freq  = 0.03 + rng() * 0.05;
+    const phase = rng() * Math.PI * 2;
+    ctx.lineWidth = 1;
+    for (let yy = y + step / 2; yy < y + h; yy += step) {
+      ctx.beginPath();
+      let first = true;
+      for (let xx = x; xx <= x + w; xx += 3) {
+        const dy = Math.sin((xx - x) * freq + phase + yy * 0.04) * amp;
+        if (first) { ctx.moveTo(xx, yy + dy); first = false; }
+        else        ctx.lineTo(xx, yy + dy);
+      }
+      ctx.stroke();
+    }
+  }
+  function rectWiggleXLines (ctx, x, y, w, h, rng, amp) {
+    const step  = 4 + rng() * 5;
+    const freq  = 0.03 + rng() * 0.05;
+    const phase = rng() * Math.PI * 2;
+    ctx.lineWidth = 1;
+    for (let xx = x + step / 2; xx < x + w; xx += step) {
+      ctx.beginPath();
+      let first = true;
+      for (let yy = y; yy <= y + h; yy += 3) {
+        const dx = Math.sin((yy - y) * freq + phase + xx * 0.04) * amp;
+        if (first) { ctx.moveTo(xx + dx, yy); first = false; }
+        else        ctx.lineTo(xx + dx, yy);
+      }
+      ctx.stroke();
+    }
+  }
+  function rectBackforthLines (ctx, x, y, w, h, rng) {
+    const step = Math.max(4, 4 + rng() * 5);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    let dir = 1;
+    let yy = y;
+    ctx.moveTo(x, yy);
+    while (yy <= y + h) {
+      ctx.lineTo(dir > 0 ? x + w : x, yy);
+      yy += step;
+      if (yy <= y + h) ctx.lineTo(dir > 0 ? x + w : x, yy);
+      dir *= -1;
+    }
+    ctx.stroke();
+  }
+  function rectNoise (ctx, x, y, w, h, rng) {
+    const density = Math.floor(40 + rng() * (w * h) * 0.04);
+    for (let i = 0; i < density; i++) {
+      const px = x + rng() * w;
+      const py = y + rng() * h;
+      const g  = 50 + Math.floor(rng() * 60);
+      ctx.fillStyle = `rgb(${g},${g},${g})`;
+      ctx.fillRect(px, py, 1, 1);
+    }
+  }
+
+  let epoch = 0;
+  let cur    = pickTarget();
+  let target = { ...cur };
+  let from   = { ...cur };
+  let lastEpoch = performance.now();
+
+  function draw () {
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+    ctx.clearRect(0, 0, W, H);
+
+    const n    = Math.max(2, Math.round(cur.n));
+    const marg = cur.marg;
+    const amp  = cur.amp;
+    const cellW = (W - marg * (n + 1)) / n;
+    const cellH = (H - marg * (n + 1)) / n;
+
+    const rng = mulberry32(epoch * 9973 + n * 131);
+
+    for (let j = 0; j < n; j++) {
+      for (let k = 0; k < n; k++) {
+        const x = marg + j * (cellW + marg);
+        const y = marg + k * (cellH + marg);
+        const t = Math.floor(rng() * 5);
+        ctx.strokeStyle = STROKES[Math.floor(rng() * STROKES.length)];
+        ctx.fillStyle   = ctx.strokeStyle;
+        switch (t) {
+          case 0: rectWiggleXLines  (ctx, x, y, cellW, cellH, rng, amp); break;
+          case 1: rectWiggleLines   (ctx, x, y, cellW, cellH, rng, amp); break;
+          case 2: rectLines         (ctx, x, y, cellW, cellH, rng);      break;
+          case 3: rectBackforthLines(ctx, x, y, cellW, cellH, rng);      break;
+          case 4: rectNoise         (ctx, x, y, cellW, cellH, rng);      break;
+        }
+      }
+    }
+  }
+
+  function tick (now) {
+    const sinceEpoch = now - lastEpoch;
+    if (sinceEpoch >= EPOCH_MS) {
+      lastEpoch = now;
+      from   = { ...cur };
+      target = pickTarget();
+      epoch++;
+    }
+    const k = ease(Math.min(1, sinceEpoch / TRANS_MS));
+    cur = {
+      n:    lerp(from.n,    target.n,    k),
+      marg: lerp(from.marg, target.marg, k),
+      amp:  lerp(from.amp,  target.amp,  k),
+    };
+    cur.amp += Math.sin(now * 0.0009) * 0.6;   // subtle breathing
+
+    if (elN) elN.textContent = Math.round(cur.n);
+    if (elM) elM.textContent = Math.round(cur.marg);
+    if (elA) elA.textContent = cur.amp.toFixed(1);
+
+    draw();
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

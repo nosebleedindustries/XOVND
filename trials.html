@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>XOVND — Trials</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="auth.css">
+<style>
+  /* yellow page mode — flips the page background only, keeps the dark sticky header readable */
+  body.trials { background: var(--yellow); color: var(--black); }
+  body.trials .sub-shell { padding: 64px 40px 120px; max-width: 1200px; margin: 0 auto; }
+
+  /* head */
+  .tr-head {
+    text-align: center; margin-bottom: 56px;
+    border-bottom: 1px solid rgba(0,0,0,0.18); padding-bottom: 44px;
+  }
+  .tr-head .eyebrow {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: rgba(0,0,0,0.6); letter-spacing: 0.24em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .tr-head h1 {
+    font-family: 'Archivo Black'; font-size: clamp(56px, 7vw, 112px);
+    line-height: 0.86; letter-spacing: -0.03em; margin: 0 0 22px;
+    color: var(--black); text-wrap: balance;
+  }
+  .tr-head h1 .stamp {
+    display: inline-block; background: var(--black); color: var(--yellow);
+    padding: 0 14px;
+  }
+  .tr-head p {
+    max-width: 620px; margin: 0 auto; color: rgba(0,0,0,0.7);
+    font-size: 17px; line-height: 1.55; text-wrap: pretty;
+  }
+
+  /* the two pillows */
+  .tr-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    max-width: 1040px; margin: 0 auto;
+  }
+  .pillow {
+    background: #FFFFFF;
+    border-radius: 36px;
+    padding: 36px 36px 32px;
+    display: flex; flex-direction: column; gap: 22px;
+    position: relative;
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.06),
+      0 22px 48px -28px rgba(0,0,0,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform .22s ease, box-shadow .22s ease;
+  }
+  .pillow:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.06),
+      0 32px 60px -28px rgba(0,0,0,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+  .pillow .tag {
+    align-self: flex-start;
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    background: var(--black); color: var(--yellow);
+    padding: 5px 10px; border-radius: 999px;
+  }
+  .pillow .tag.free { background: var(--yellow); color: var(--black); border: 1px solid var(--black); }
+  .pillow h2 {
+    font-family: 'Archivo Black'; font-size: 68px; line-height: 0.92;
+    letter-spacing: -0.04em; margin: 0; color: var(--black);
+  }
+  .pillow h2 .sub {
+    display: block; font-family: 'Space Mono', monospace;
+    font-size: 13px; font-weight: 400; letter-spacing: 0.22em;
+    text-transform: uppercase; color: rgba(0,0,0,0.55);
+    margin-top: 10px;
+  }
+  .pillow .lede {
+    font-size: 15px; line-height: 1.55; color: rgba(0,0,0,0.72);
+    text-wrap: pretty; margin: 0;
+  }
+  .pillow .specs {
+    display: flex; gap: 0; flex-wrap: wrap;
+    border-top: 1px dashed rgba(0,0,0,0.16);
+    border-bottom: 1px dashed rgba(0,0,0,0.16);
+    padding: 14px 0;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(0,0,0,0.6);
+  }
+  .pillow .specs > span { display: inline-flex; align-items: center; gap: 8px; padding-right: 18px; }
+  .pillow .specs > span + span { padding-left: 18px; border-left: 1px solid rgba(0,0,0,0.12); }
+  .pillow .specs b { color: var(--black); font-weight: 700; }
+
+  /* download row: button + windows logo */
+  .pillow .dl-row {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 14px; align-items: stretch;
+    margin-top: auto;
+  }
+  .pillow .dl-btn {
+    background: var(--black); color: var(--yellow);
+    border: none; cursor: pointer;
+    padding: 18px 22px; border-radius: 999px;
+    font-family: 'Archivo Black'; font-size: 14px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    transition: background .15s, color .15s, transform .15s;
+  }
+  .pillow .dl-btn:hover { background: var(--pink); color: var(--black); transform: translateY(-1px); }
+  .pillow .dl-btn .arrow { font-family: 'Space Mono', monospace; font-weight: 700; }
+  .pillow .dl-btn:hover .arrow { transform: translateX(4px); }
+
+  .pillow .os {
+    background: rgba(0,0,0,0.05);
+    border-radius: 999px;
+    width: 62px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .pillow .os:hover { background: rgba(0,0,0,0.1); }
+  .pillow .os svg { width: 24px; height: 24px; }
+
+  .pillow .meta {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(0,0,0,0.5); text-align: center;
+  }
+
+  /* note strip at the bottom */
+  .tr-note {
+    margin: 56px auto 0; max-width: 1040px;
+    background: var(--black); color: var(--yellow);
+    border-radius: 36px; padding: 28px 36px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center;
+  }
+  .tr-note .dot { width: 12px; height: 12px; background: var(--yellow); border-radius: 999px; animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  .tr-note .msg {
+    font-family: 'Space Mono', monospace; font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .tr-note .msg b { color: var(--white); }
+  .tr-note .right { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.7; }
+
+  @media (max-width: 800px) {
+    .tr-grid { grid-template-columns: 1fr; }
+    .pillow h2 { font-size: 52px; }
+    body.trials .sub-shell { padding: 32px 18px 64px; }
+    .tr-note { grid-template-columns: 1fr; text-align: center; }
+  }
+</style>
+</head>
+<body class="trials">
+<div id="root"></div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="auth.jsx"></script>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel" src="trials.jsx"></script>
+</body>
+</html>
