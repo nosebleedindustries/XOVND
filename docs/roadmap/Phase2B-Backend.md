@@ -1,7 +1,8 @@
 # Phase 2B — Web backend
 
-**Status:** unblocked — Phase 2A (static deploy) ✅ done
-**Estimate:** 3–5 focused sessions over ~2–3 weeks
+**Status:** Phase 2A ✅ · Phase 2B.1 (Next.js migration) ✅ on branch
+`next-migration` (preview deploy live, not yet merged to `main`)
+**Estimate:** remaining 3–4 focused sessions over ~2 weeks
 
 Picks up from Phase 2A (static `xovnd.com` on Vercel with Moonbase hosted
 checkout) and turns the design's account / forum / admin / support /
@@ -9,7 +10,7 @@ subscription pages into a real working application.
 
 ---
 
-## ✅ Phase 2A — already done
+## ✅ Phase 2A — done
 
 - [x] `xovnd.com` registered (Cloudflare Registrar)
 - [x] Vercel project deployed, GitHub auto-deploys on push to `main`
@@ -17,36 +18,39 @@ subscription pages into a real working application.
 - [x] Cloudflare Email Routing: `joan@xovnd.com` forwards to gmail
 - [x] CLVSTER BUY buttons route to Moonbase hosted checkout
 
+## ✅ Phase 2B.1 — Next.js migration (DONE on branch `next-migration`)
+
+- [x] `npx create-next-app@latest` equivalent — Next.js 14.2.18 (App Router, JSX)
+- [x] Port each page → `app/<route>/page.jsx`:
+  - `/` (landing), `/clvster`, `/trials`, `/subscription`,
+    `/support`, `/forum`, `/account`, `/walkthrough` — all ported
+  - `/admin`, `/auth` — placeholders (need Supabase first → Phase 2B.3/9)
+- [x] Shared components in `components/` (Marquee, SiteHeader, SiteFooter,
+      CartDrawer, useCart, useAuth stub, ComingSoon)
+- [x] CSS merged into `app/globals.css` (3564 lines)
+- [x] Assets in `public/`
+- [x] Favicon, robots.js, sitemap.js
+- [x] ESLint config to keep build logs clean
+- [x] Cart drawer Checkout button wired to Moonbase
+
+### Known issues to fix in 2B.1b (next polish session)
+- [ ] **Cart drawer Checkout button still not navigating** — `window.open`
+      call appears wired but doesn't trigger. Likely a popup-blocker
+      issue, or onClick not actually firing. Debug with browser devtools
+      console first. Fallback: change to a direct `<a href target=_blank>`
+      anchor styled as a button (browsers don't popup-block direct nav).
+- [ ] Per-page SEO metadata — needs server-component wrapper around each
+      'use client' page; touched in 2B.13.
+- [ ] `<img>` → `next/image` migration — ~50 swaps across pages, deferred
+      for performance polish session.
+- [ ] Admin page still a placeholder — needs Supabase first (2B.2 → 2B.9).
+- [ ] Auth page still a placeholder — replaced wholesale in 2B.3.
+
 ---
 
 ## 🟢 Phase 2B — checklist
 
-### 2B.1 · Next.js migration
-The current site is multi-page HTML + React-via-Babel-in-browser. Works
-for static content but can't host serverless API routes, auth middleware,
-or DB queries. Migrate to Next.js 14 (App Router) to get all three.
-
-- [ ] `npx create-next-app@latest` → fresh Next.js 14 project, TypeScript,
-      Tailwind CSS, App Router, ESLint
-- [ ] Port each page → corresponding `app/<route>/page.tsx`:
-  - `index.html` → `app/page.tsx`
-  - `clvster.html` → `app/clvster/page.tsx`
-  - `account.html` → `app/account/page.tsx`
-  - `auth.html` → `app/auth/page.tsx`
-  - `subscription.html` → `app/subscription/page.tsx`
-  - `trials.html` → `app/trials/page.tsx`
-  - `support.html` → `app/support/page.tsx`
-  - `forum.html` → `app/forum/page.tsx`
-  - `admin.html` → `app/admin/page.tsx` (protected — see 2B.8)
-  - `walkthrough.html` → `app/walkthrough/page.tsx`
-- [ ] Move shared components from `shared.jsx` → `components/` folder
-- [ ] CSS: keep current vanilla CSS in `app/globals.css`, migrate
-      component-level styles to Tailwind incrementally
-- [ ] Move assets to `public/`
-- [ ] Verify all routes render + look identical to Phase 2A
-- [ ] Update `vercel.json` (or delete — Next.js needs none)
-- [ ] First `vercel deploy` from the Next.js codebase → confirm
-      `xovnd.com` still loads
+### 2B.1 · Next.js migration ✅ DONE — see done-list above
 
 ### 2B.2 · Database + auth — Supabase
 Supabase = managed Postgres + auth + storage + realtime. Free tier
