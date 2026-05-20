@@ -1,51 +1,75 @@
 # XOVND · web
 
-Source for the XOVND web presence (xound.com) — landing, CLVSTER product page, account / forum / admin / support pages.
+Source for **xound.com** — `https://xovnd.com`.
 
 ## Stack
 
-- **Phase 2A (current)**: static HTML + React loaded from CDN + Babel-in-browser. No build step. Hosted on Vercel from this repo.
-- **Phase 2B (next)**: convert to Next.js 14 App Router; add Supabase (auth + Postgres) and Vercel serverless functions for backend (Moonbase webhooks, forum, admin).
+- **Next.js 14** (App Router, JSX — TypeScript migration deferred)
+- **React 18**
+- Static CSS in `app/globals.css` (merged from the original
+  shared / auth / walkthrough stylesheets + per-page inline `<style>`
+  blocks; Tailwind migration deferred)
+- Vercel hosting, auto-deploy on push to `main`
+- All sales currently route to **Moonbase hosted checkout** at
+  `https://xound.moonbase.sh/buy/clvster`
 
-## Pages
+## Status
 
-| Page | URL | Status |
+**Phase 2B.1 — Next.js migration in progress.**
+
+The Babel-in-browser multi-page static site has been ported to a
+Next.js 14 App Router project. Two critical pages (landing `/` and
+CLVSTER product `/clvster`) are fully ported. The remaining pages
+(`/account`, `/subscription`, `/trials`, `/support`, `/forum`,
+`/admin`, `/auth`, `/walkthrough`) are placeholder stubs that share
+the header/footer chrome and link back to the legacy reference.
+
+Original JSX files preserved under [`legacy/`](./legacy/) for
+incremental porting.
+
+## Routes
+
+| Route | File | Status |
 |---|---|---|
-| Landing | `/` (`index.html`) | live |
-| CLVSTER product | `/clvster` | live · BUY → Moonbase checkout |
-| Account | `/account` | UI only — backend in Phase 2B |
-| Auth | `/auth` | UI only |
-| Subscription | `/subscription` | UI only |
-| Trials | `/trials` | UI only |
-| Support | `/support` | UI only |
-| Forum | `/forum` | UI only |
-| Admin | `/admin` | UI only |
-| Walkthrough | `/walkthrough` | live |
-
-## Sales
-
-CLVSTER BUY buttons currently link to the Moonbase hosted checkout:
-`https://xound.moonbase.sh/buy/clvster`
-
-Moonbase handles:
-- MoR (merchant of record)
-- VAT / GST / sales tax compliance
-- Localised currency + card processing
-- Customer license key delivery via email
-- Customer portal (subscription management, downloads, license deactivation)
-
-To flip the BUY action back to the in-browser cart UI (for testing the
-multi-product cart flow), set `window.__USE_LOCAL_CART = true` in the
-browser console before clicking.
-
-## Deploy
-
-Auto-deploys on push to `master` via Vercel. Domain config in Vercel
-dashboard → Settings → Domains.
+| `/` | `app/page.jsx` | ✅ ported |
+| `/clvster` | `app/clvster/page.jsx` | ✅ ported (BUY → Moonbase) |
+| `/trials` | `app/trials/page.jsx` | ✅ ported |
+| `/account` | `app/account/page.jsx` | 🚧 placeholder |
+| `/subscription` | `app/subscription/page.jsx` | 🚧 placeholder |
+| `/support` | `app/support/page.jsx` | 🚧 placeholder |
+| `/forum` | `app/forum/page.jsx` | 🚧 placeholder |
+| `/admin` | `app/admin/page.jsx` | 🚧 placeholder |
+| `/auth` | `app/auth/page.jsx` | 🚧 placeholder |
+| `/walkthrough` | `app/walkthrough/page.jsx` | 🚧 placeholder |
 
 ## Local dev
 
-Open `index.html` in a modern browser (Chrome / Edge / Firefox). Because
-all JSX is compiled in-browser via Babel-standalone, no build step is
-needed locally. Use `python -m http.server 8000` if you want a quick local
-server (avoids `file://` CORS issues with the fonts).
+```bash
+npm install
+npm run dev          # http://localhost:3000
+```
+
+`npm run build` for production build; `npm start` to serve it locally.
+
+## Deploy
+
+Vercel auto-detects Next.js, no config needed. Push to `main` →
+auto-deploy to production. Push to any other branch → preview deploy
+URL appears in PR / commit.
+
+## Roadmap
+
+Phase 2B detailed checklist in
+[`docs/roadmap/Phase2B-Backend.md`](./docs/roadmap/Phase2B-Backend.md):
+Supabase auth + DB, Moonbase webhook handler, support tickets, forum
+threads, admin analytics, promotion management, email infrastructure,
+SEO, mailing list, analytics.
+
+## Shared infrastructure
+
+- **Domain**: Cloudflare Registrar (`xovnd.com`)
+- **DNS**: Cloudflare (with Vercel CNAMEs as `DNS only` — don't proxy)
+- **Email**: Cloudflare Email Routing — `joan@xovnd.com` → Gmail
+- **Hosting**: Vercel (free hobby tier)
+- **Future**: Supabase (Postgres + Auth), Resend (email), Plausible
+  (analytics), Sentry (errors), EmailOctopus (mailing list)
