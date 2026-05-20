@@ -4,6 +4,29 @@
    Phase 2B.x cleanup: dedupe + Tailwind migration.
    ============================================================= */
 
+/* ──── XOVND logo (header + footer) ──── */
+/* Brightens the gold artwork toward true brand yellow + adds a subtle
+   bloom so the logo reads as the active brand mark, not muted gold.
+   `brightness + saturate + slight hue-rotate` push the warm gold toward
+   the brand's `--yellow` (#E8D60E); two drop-shadows give the bloom. */
+.brand-xovnd { display: inline-flex; align-items: center; }
+.xovnd-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+  filter:
+    brightness(1.18) saturate(1.45) hue-rotate(-8deg)
+    drop-shadow(0 0 6px rgba(232,214,14,0.55))
+    drop-shadow(0 0 18px rgba(232,214,14,0.22));
+  transition: filter .25s ease, transform .25s ease;
+}
+.brand-xovnd:hover .xovnd-logo {
+  filter:
+    brightness(1.32) saturate(1.6) hue-rotate(-8deg)
+    drop-shadow(0 0 10px rgba(232,214,14,0.75))
+    drop-shadow(0 0 24px rgba(232,214,14,0.35));
+}
+
 /* ──── shared.css ──── */
 /* Shared base — palette, type, header/footer/cart, buttons */
 :root {

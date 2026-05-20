@@ -159,9 +159,8 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
       </div>
 
       <header className="nav">
-        <a href="#" className="brand" style={{ gap: 0 }}>
-          <img src="/assets/fluxus-mark.png" alt="Xovnd mark" style={{ objectFit: "contain", height: "64px", width: "64px" }} />
-          <span className="wordmark" style={{ fontSize: "40px", marginLeft: "-15px", transform: "scaleY(1.95)", transformOrigin: "left center", display: "inline-block" }}>OVND</span>
+        <a href="/" className="brand brand-xovnd" aria-label="XOVND home">
+          <img src="/assets/xovnd-logo.png" alt="XOVND" className="xovnd-logo" />
         </a>
         <nav className="primary">
           <a href="#">VST Instruments</a>
