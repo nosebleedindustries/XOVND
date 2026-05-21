@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 
 /* CLVSTER product detail page */
@@ -774,7 +774,7 @@ function Pricing({ onBuy }) {
 /* -------- App -------- */
 function App() {
   const { cart, cartOpen, openCart, closeCart, addToCart, removeAt, toast } = useCart();
-  const auth = useAuth ? useAuth() : { user: null, login: () => {}, logout: () => {} };
+  const auth = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   // Phase 2A: Buy buttons route straight to Moonbase hosted checkout —
   // they handle MoR, VAT, localised currency, card forms. The local cart

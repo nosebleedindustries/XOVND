@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 
 /* Account page — profile, downloads (with 8-digit codes), subscription, messages, logout */
@@ -382,11 +382,11 @@ function AccountApp() {
   const showToast = (t) => { setToast(t); setTimeout(() => setToast(""), 2000); };
 
   const [profile, setProfile] = useState(() => readObj(ACC_PROFILE_KEY, {}));
-  useAccEffect(() => { writeObj(ACC_PROFILE_KEY, profile); }, [profile]);
+  useEffect(() => { writeObj(ACC_PROFILE_KEY, profile); }, [profile]);
 
   const [dl, setDl] = useState(() => readObj(ACC_DL_KEY, null));
-  useAccEffect(() => { if (auth.user && !dl) setDl(ensurePurchaseCodes(auth.user)); }, [auth.user]);
-  useAccEffect(() => { if (dl) writeObj(ACC_DL_KEY, dl); }, [dl]);
+  useEffect(() => { if (auth.user && !dl) setDl(ensurePurchaseCodes(auth.user)); }, [auth.user]);
+  useEffect(() => { if (dl) writeObj(ACC_DL_KEY, dl); }, [dl]);
 
   const regenCode = (id) => {
     if (!dl) return;
@@ -395,7 +395,7 @@ function AccountApp() {
   };
 
   const [messages, setMessages] = useState(() => readObj(ACC_MSG_KEY, SEED_MESSAGES));
-  useAccEffect(() => { writeObj(ACC_MSG_KEY, messages); }, [messages]);
+  useEffect(() => { writeObj(ACC_MSG_KEY, messages); }, [messages]);
 
   const visibleName = profile.name || auth.user?.name || auth.user?.email.split("@")[0] || "";
   const initials = (visibleName || "?").trim().slice(0, 2).toUpperCase();
