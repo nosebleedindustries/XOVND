@@ -29,10 +29,10 @@
   display: inline-block;
   position: relative;
   isolation: isolate;
-  height: 140px;
+  height: 96px;
   margin-top: -46px;     /* pillow top touches viewport y=0 */
-  margin-bottom: -88px;
-  border-radius: 32px;
+  margin-bottom: -44px;  /* visible bottom sits just below the nav bar */
+  border-radius: 24px;
   z-index: 60;            /* above sticky header (z:50) + marquee */
   cursor: pointer;
 }
