@@ -151,8 +151,8 @@ export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccount
         <div className="nav-right">
           <a
             className="nav-btn"
-            href={user ? '/account' : '#'}
-            onClick={(e) => { if (!user) { e.preventDefault(); onAccountClick && onAccountClick(); } }}
+            href="#"
+            onClick={(e) => { e.preventDefault(); onAccountClick && onAccountClick(); }}
           >
             {user
               ? (user.name || (user.email && user.email.split('@')[0]) || (user.type === 'beta' ? 'Beta tester' : user.type === 'buyer' ? 'Customer' : 'Account'))

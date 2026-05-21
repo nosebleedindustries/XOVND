@@ -105,7 +105,8 @@ function App() {
 
   const onAccountClick = () => {
     if (auth.user) {
-      if (confirm(`Signed in as ${auth.user.email}\n\nSign out?`)) auth.logout();
+      const id = auth.user.code || auth.user.email || 'user';
+      if (confirm(`Signed in as ${id}\n\nSign out?`)) auth.logout();
     } else {
       access.openModal('code');
     }

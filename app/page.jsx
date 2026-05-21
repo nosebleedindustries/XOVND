@@ -163,8 +163,10 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
           <a href="/forum">Forum</a>
         </nav>
         <div className="nav-right">
-          <a className="nav-btn" href={user ? "/account" : "#"} onClick={(e) => {if (!user) {e.preventDefault();onAccountClick();}}}>
-            {user ? user.name || user.email.split("@")[0] : "Account"}
+          <a className="nav-btn" href="#" onClick={(e) => { e.preventDefault(); onAccountClick(); }}>
+            {user
+              ? (user.name || (user.email && user.email.split('@')[0]) || (user.type === 'beta' ? 'Beta tester' : user.type === 'buyer' ? 'Customer' : 'Account'))
+              : 'Account'}
           </a>
           <button className="nav-btn cart-btn" onClick={onOpenCart}>
             Cart <span className="cart-count">{cartCount}</span>
