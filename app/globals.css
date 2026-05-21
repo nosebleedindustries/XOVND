@@ -86,6 +86,16 @@
 }
 @keyframes glowOrbit { to { --glow-angle: 360deg; } }
 
+/* Click-springy bounce — squash then overshoot then settle */
+.brand-glow-ring.springing { animation: logoSpring 0.55s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes logoSpring {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.86) rotate(-1.5deg); }
+  60%  { transform: scale(1.10) rotate(1deg); }
+  85%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
 /* Footer logo stays contained, same blend + pillow, no glow */
 .foot-brand .logo img.xovnd-logo {
   height: 52px !important;

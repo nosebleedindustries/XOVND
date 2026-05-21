@@ -117,9 +117,12 @@ function makeValueNoise() {
 // ─── SiteHeader ─────────────────────────────────────────────────────────
 export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccountClick }) {
   const [marqueeMode, setMarqueeMode] = useState('text');
+  const [springing, setSpringing] = useState(false);
   const onLogoClick = (e) => {
     e.preventDefault();
     setMarqueeMode((m) => (m === 'text' ? 'pattern' : 'text'));
+    setSpringing(true);
+    setTimeout(() => setSpringing(false), 600);
   };
   return (
     <>
@@ -131,7 +134,7 @@ export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccount
           aria-label="XOVND home — click to toggle the noise field"
           onClick={onLogoClick}
         >
-          <span className="brand-glow-ring">
+          <span className={'brand-glow-ring' + (springing ? ' springing' : '')}>
             <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
           </span>
         </a>
