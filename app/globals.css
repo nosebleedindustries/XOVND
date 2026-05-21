@@ -20,18 +20,23 @@
   filter: drop-shadow(0 0 10px rgba(232,214,14,0.35));
   transition: filter .25s ease, transform .25s ease;
 }
-/* Header: oversized logo that breaks the bottom edge of the nav bar */
+/* Header: oversized logo that breaks the bottom edge of the nav bar.
+   mix-blend-mode: screen drops the JPG's black background — dark pixels
+   become transparent against the black header so only the yellow
+   wireframe letters remain. */
 .brand.brand-xovnd { align-self: stretch; }
 .brand.brand-xovnd img.xovnd-logo {
-  height: 110px !important;
-  margin-top: -18px;
-  margin-bottom: -54px;
+  height: 140px !important;
+  margin-top: -28px;
+  margin-bottom: -70px;
   position: relative;
   z-index: 2;
+  mix-blend-mode: screen;
 }
-/* Footer logo stays contained */
+/* Footer logo stays contained, same blend trick */
 .foot-brand .logo img.xovnd-logo {
-  height: 44px !important;
+  height: 52px !important;
+  mix-blend-mode: screen;
 }
 .brand.brand-xovnd:hover img.xovnd-logo {
   filter:
