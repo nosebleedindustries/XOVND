@@ -3739,6 +3739,31 @@ footer a:hover { color: var(--yellow); }
 }
 .beta-meta .sep { color: #2a2722; }
 
+/* OAuth (Google / Apple) buttons at top of the AccessModal */
+.oauth-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.oauth-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: #15130f; color: var(--white);
+  border: 1px solid #2a2722; border-radius: 8px;
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .1s;
+}
+.oauth-btn:hover { background: #1a1814; border-color: #3a352d; }
+.oauth-btn:active { transform: scale(0.99); }
+.oauth-btn.apple { background: #fff; color: #000; border-color: #fff; }
+.oauth-btn.apple:hover { background: #f4f4f4; border-color: #f4f4f4; }
+.oauth-sep {
+  display: flex; align-items: center; gap: 12px;
+  margin: 14px 0;
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: #6a6557;
+}
+.oauth-sep::before, .oauth-sep::after { content: ""; flex: 1; height: 1px; background: #2a2722; }
+
 /* AccessModal — code-redeem and request-access tabs share infl-* shell */
 .access-tabs { display: flex; gap: 4px; margin-bottom: 18px; padding: 4px; background: #15130f; border-radius: 999px; border: 1px solid #2a2722; }
 .access-tab {

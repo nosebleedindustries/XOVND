@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback, useRef, Fragment } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 
 // ─── Marquee ────────────────────────────────────────────────────────────
 // mode: 'text' (default scrolling announcements) | 'pattern' (animated
@@ -325,36 +326,54 @@ export function useCart() {
   };
 }
 
-// ─── useAuth (localStorage-backed during closed beta) ──────────────────
-// Reads/writes the user redeemed via <AccessModal />. Phase 2B.3
-// swaps this for Supabase Auth without changing the call sites.
+// ─── useAuth (NextAuth session + localStorage redemption) ──────────────
+// Identity has two sources during the closed-beta phase:
+//   1. NextAuth session — Google/Apple OAuth via /api/auth/[...nextauth]
+//   2. localStorage redemption — code entered through <AccessModal />
+// NextAuth wins when both are present (a signed-in OAuth user shouldn't
+// be downgraded to a code-only user mid-session).
 const AUTH_KEY = 'xovnd_user';
 
 export function useAuth() {
-  const [user, setUser] = useState(null);
+  const { data: session, status } = useSession();
+  const [local, setLocal] = useState(null);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
       const raw = localStorage.getItem(AUTH_KEY);
-      if (raw) setUser(JSON.parse(raw));
+      if (raw) setLocal(JSON.parse(raw));
     } catch {}
     const onStorage = (e) => {
       if (e.key !== AUTH_KEY) return;
-      try { setUser(e.newValue ? JSON.parse(e.newValue) : null); } catch { setUser(null); }
+      try { setLocal(e.newValue ? JSON.parse(e.newValue) : null); } catch { setLocal(null); }
     };
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
   }, []);
+
+  const oauthUser = session?.user
+    ? {
+        name: session.user.name,
+        email: session.user.email,
+        image: session.user.image,
+        provider: session.provider,
+      }
+    : null;
+  const user = oauthUser || local;
+
   return {
     user,
+    status, // 'loading' | 'authenticated' | 'unauthenticated' — useful for UI
     login: (u) => {
       const next = u && typeof u === 'object' ? u : { email: String(u || ''), name: String(u || '').split('@')[0] };
       try { localStorage.setItem(AUTH_KEY, JSON.stringify(next)); } catch {}
-      setUser(next);
+      setLocal(next);
     },
     logout: () => {
       try { localStorage.removeItem(AUTH_KEY); } catch {}
-      setUser(null);
+      setLocal(null);
+      if (session) signOut({ redirect: false }).catch(() => {});
     },
   };
 }
