@@ -695,8 +695,18 @@ function Footer() {
 
 /* -------------- CART -------------- */
 
+// Phase 2A: the cart is mostly decorative on the landing page; the real
+// purchase happens via Moonbase hosted checkout. This URL 404s today
+// because the CLVSTER product hasn't been published on Moonbase yet —
+// update MOONBASE_CHECKOUT below once Joan publishes the product.
+const MOONBASE_CHECKOUT = 'https://xound.moonbase.sh/buy/clvster';
+
 function Cart({ open, onClose, items, onRemove }) {
   const subtotal = items.reduce((s, x) => s + (x.sale || x.price), 0);
+  const onCheckout = () => {
+    if (items.length === 0) return;
+    window.open(MOONBASE_CHECKOUT, '_blank', 'noopener,noreferrer');
+  };
   return (
     <>
       <div className={"cart-overlay" + (open ? " open" : "")} onClick={onClose}></div>
@@ -735,7 +745,12 @@ function Cart({ open, onClose, items, onRemove }) {
             <span className="label">Subtotal</span>
             <span className="amt">{`€${subtotal}`}</span>
           </div>
-          <button className="checkout-btn" disabled={items.length === 0} style={{ opacity: items.length ? 1 : 0.4 }}>
+          <button
+            className="checkout-btn"
+            disabled={items.length === 0}
+            onClick={onCheckout}
+            style={{ opacity: items.length ? 1 : 0.4 }}
+          >
             <span>Checkout</span>
             <span>→</span>
           </button>
