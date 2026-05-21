@@ -17,13 +17,12 @@
 .foot-brand .logo img.xovnd-logo {
   width: auto !important;
   display: block;
-  filter: drop-shadow(0 0 10px rgba(232,214,14,0.35));
-  transition: filter .25s ease, transform .25s ease;
+  transition: transform .25s ease;
 }
 /* Header: oversized logo that breaks the bottom edge of the nav bar.
-   mix-blend-mode: screen drops the JPG's black background — dark pixels
-   become transparent against the black header so only the yellow
-   wireframe letters remain. */
+   mix-blend-mode: screen drops the JPG's black background and
+   border-radius clips any residual JPEG-compression noise at the
+   corners into a soft pillow shape. */
 .brand.brand-xovnd { align-self: stretch; }
 .brand.brand-xovnd img.xovnd-logo {
   height: 140px !important;
@@ -32,16 +31,13 @@
   position: relative;
   z-index: 2;
   mix-blend-mode: screen;
+  border-radius: 32px;
 }
-/* Footer logo stays contained, same blend trick */
+/* Footer logo stays contained, same blend + pillow */
 .foot-brand .logo img.xovnd-logo {
   height: 52px !important;
   mix-blend-mode: screen;
-}
-.brand.brand-xovnd:hover img.xovnd-logo {
-  filter:
-    brightness(1.08)
-    drop-shadow(0 0 14px rgba(232,214,14,0.6));
+  border-radius: 14px;
 }
 
 /* ──── shared.css ──── */
