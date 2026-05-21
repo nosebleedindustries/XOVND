@@ -109,24 +109,39 @@ export function AccessModal({ open, onClose, initialTab = 'code' }) {
     const log = readJSON(REDEEMED_KEY, []);
     log.push(user);
     writeJSON(REDEEMED_KEY, log);
+    // Fire-and-forget log to Supabase (don't block the download on it)
+    fetch('/api/redemptions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: hit.code, type: hit.type }),
+    }).catch(() => {});
     triggerDownload();
     setRedeemed(user);
     setStage('redeemed');
   };
 
   const canRequest = name.trim().length > 1 && email.includes('@') && handle.trim().length > 0;
-  const submitRequest = (e) => {
+  const submitRequest = async (e) => {
     e.preventDefault();
     if (!canRequest) return;
-    const list = readJSON(REQUESTS_KEY, []);
-    list.push({
+    const payload = {
       name: name.trim(),
       email: email.trim().toLowerCase(),
       platform,
       handle: handle.trim(),
-      signedAt: new Date().toISOString(),
-    });
+    };
+    // localStorage fallback (Phase 2A behaviour kept while we transition)
+    const list = readJSON(REQUESTS_KEY, []);
+    list.push({ ...payload, signedAt: new Date().toISOString() });
     writeJSON(REQUESTS_KEY, list);
+    // Persist server-side too (Supabase). Don't block the UX if it fails.
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch {}
     setStage('requested');
   };
 
