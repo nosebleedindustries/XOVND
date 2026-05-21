@@ -262,7 +262,7 @@ nav.primary a .badge {
 footer.foot {
   padding: 64px 56px 32px;
   background: var(--black);
-  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px;
+  display: grid; grid-template-columns: 1fr; gap: 32px;
   border-top: 1px solid #2a2722;
 }
 footer h4 {

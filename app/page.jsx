@@ -36,15 +36,6 @@ const PRODUCTS = [
 }];
 
 
-const TESTIMONIALS = [
-{ quote: "XOVND is the only plugin chain I trust on every record I touch. PRISMA single-handedly replaced three of my outboards.", name: "Mira Okafor", role: "Producer, mixer — Lo-Fi 95, NYE, Hotline", initials: "MO", featured: true, for: "On PRISMA" },
-{ quote: "MONOLITH does this thing where it makes a flat synth bus suddenly sound like it costs a million dollars. I don't know how. I don't care.", name: "Jules Maren", role: "Engineer — Sable, KAINO, Plastic Body", initials: "JM", featured: false, for: "On MONOLITH" },
-{ quote: "I used DRIFT on the entire bridge of the last single. The label thought we re-recorded it. We didn't. We just pushed two knobs.", name: "Wren Kovacs", role: "Songwriter, artist — Hexafloor", initials: "WK", featured: false, for: "On DRIFT" },
-{ quote: "The interfaces are absurdly fun. It's the first time in a decade that opening a plugin made me want to write instead of mix.", name: "Sun Park", role: "Producer — Goldenrod, Tinta", initials: "SP", featured: false, for: "On the suite" },
-{ quote: "I demo-d PRISMA on a Thursday. By Sunday I'd finished an EP that had been stuck in my drafts for two years. Real talk.", name: "Dia Brennan", role: "Artist — solo records, scoring", initials: "DB", featured: false, for: "On PRISMA" },
-{ quote: "Most plugins try to be invisible. XOVND plugins want to be in the song. That's a totally different design philosophy.", name: "Theo Vance", role: "Mix engineer — credits across pop & indie", initials: "TV", featured: false, for: "On the suite" }];
-
-
 const AWARDS = [
 { year: "2025", title: "Plugin of the Year", org: "Soundwave Mag" },
 { year: "2025", title: "Best Creative Tool", org: "Studio Press" },
@@ -409,6 +400,32 @@ function Hero({ onAdd }) {
     if (!next) { v.play().catch(() => {}); }
     setMuted(next);
   };
+  // Browsers block autoplay-with-audio until the user interacts with the
+  // page. Listen once for any user gesture and unmute as soon as it fires
+  // so the video has sound by the time the visitor actually engages.
+  useEffect(() => {
+    let done = false;
+    const unmute = () => {
+      if (done) return;
+      const v = videoRef.current;
+      if (!v) return;
+      done = true;
+      v.muted = false;
+      v.play().catch(() => {});
+      setMuted(false);
+      window.removeEventListener('pointerdown', unmute);
+      window.removeEventListener('keydown', unmute);
+      window.removeEventListener('scroll', unmute);
+    };
+    window.addEventListener('pointerdown', unmute, { once: false });
+    window.addEventListener('keydown', unmute, { once: false });
+    window.addEventListener('scroll', unmute, { once: false, passive: true });
+    return () => {
+      window.removeEventListener('pointerdown', unmute);
+      window.removeEventListener('keydown', unmute);
+      window.removeEventListener('scroll', unmute);
+    };
+  }, []);
   return (
     <section className="hero" data-screen-label="01 Hero">
       <div className="hero-left" style={{ width: "369px" }}>
@@ -586,56 +603,6 @@ function ProductSection({ onAdd }) {
 
 }
 
-/* -------------- TESTIMONIALS -------------- */
-
-function Testimonials() {
-  const [idx, setIdx] = useState(0);
-  const trackRef = useRef(null);
-  const max = TESTIMONIALS.length - 3; // page of 3
-  const visible = 3;
-  const canPrev = idx > 0;
-  const canNext = idx < max;
-
-  return (
-    <section className="section" style={{ background: "var(--black)" }} data-screen-label="03 Testimonials">
-      <div className="section-head">
-        <div>
-          <span className="eyebrow">[ Praise · {TESTIMONIALS.length} ]</span>
-          <h2>Our clients <span className="accent"> have</span> it back...</h2>
-        </div>
-        <div className="carousel-controls">
-          <span className="num"><b>{String(idx + 1).padStart(2, "0")}</b>/{String(TESTIMONIALS.length).padStart(2, "0")}</span>
-          <button className="arrow-btn" disabled={!canPrev} onClick={() => setIdx((i) => Math.max(0, i - 1))} aria-label="Previous">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
-          </button>
-          <button className="arrow-btn" disabled={!canNext} onClick={() => setIdx((i) => Math.min(max, i + 1))} aria-label="Next">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
-          </button>
-        </div>
-      </div>
-      <div className="testimonial-strip">
-        <div className="testimonial-track"
-        ref={trackRef}
-        style={{ transform: `translateX(calc(-${idx} * (100% + 16px) / ${visible}))` }}>
-          {TESTIMONIALS.map((t, i) =>
-          <article className={"testimonial-card" + (t.featured ? " featured" : "")} key={i}>
-              <div className="qmark">“</div>
-              <blockquote>{t.quote}</blockquote>
-              <div className="for">{t.for}</div>
-              <div className="who">
-                <div className="avatar">{t.initials}</div>
-                <div>
-                  <div className="name">{t.name}</div>
-                  <div className="role">{t.role}</div>
-                </div>
-              </div>
-            </article>
-          )}
-        </div>
-      </div>
-    </section>);
-
-}
 
 /* -------------- AWARDS -------------- */
 
@@ -700,8 +667,7 @@ function Footer() {
     <footer className="foot">
       <div className="foot-brand">
         <div className="logo">
-          <img src="/assets/fluxus-mark.png" alt="" />
-          <span>OVND</span>
+          <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" style={{ height: 36 }} />
         </div>
         <p>An independent software studio building creative audio instruments for producers, artists, and engineers.</p>
         <div className="socials" style={{ marginTop: 18 }}>
@@ -718,36 +684,6 @@ function Footer() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 4v3a5 5 0 0 0 4 5v3a8 8 0 0 1-4-1v5a6 6 0 1 1-6-6v3a3 3 0 1 0 3 3V4z" /></svg>
           </a>
         </div>
-      </div>
-      <div>
-        <h4>Products</h4>
-        <ul>
-          <li><a href="#">All Plugins</a></li>
-          <li><a href="#">The Bundle</a></li>
-          <li><a href="#">Free Tools</a></li>
-          <li><a href="#">Trials</a></li>
-          <li><a href="#">App Store</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="/support">Support</a></li>
-          <li><a href="/forum">Forum</a></li>
-          <li><a href="#">Tutorials</a></li>
-          <li><a href="#">Account</a></li>
-          <li><a href="#">Refund Policy</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Studio</h4>
-        <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Jobs</a></li>
-          <li><a href="#">Press Kit</a></li>
-          <li><a href="#">Privacy</a></li>
-        </ul>
       </div>
       <div className="foot-bottom">
         <span>© 2026 XOVND Audio — All sounds reserved</span>
@@ -884,9 +820,6 @@ function App() {
       <Header cartCount={cart.length} onOpenCart={() => setCartOpen(true)} user={auth.user} onAccountClick={onAccountClick} />
       <Hero onAdd={addToCart} />
       {/* Walkthrough moved to its own route: /walkthrough */}
-      <ProductSection onAdd={addToCart} />
-      <Testimonials />
-      <Awards />
       <Manifesto />
       <Footer />
       <Cart open={cartOpen}
