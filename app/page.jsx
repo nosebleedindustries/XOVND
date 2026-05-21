@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
-import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
+import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth, Marquee } from '@/components/shared';
 
 
 /* -------------- DATA -------------- */
@@ -139,27 +139,22 @@ const VIZ = { knobs: KnobViz, wave: WaveViz, grid: GridViz, clvster: ClvsterViz,
 /* -------------- HEADER -------------- */
 
 function Header({ cartCount, onOpenCart, user, onAccountClick }) {
+  const [marqueeMode, setMarqueeMode] = useState('text');
+  const onLogoClick = (e) => {
+    e.preventDefault();
+    setMarqueeMode((m) => (m === 'text' ? 'pattern' : 'text'));
+  };
   return (
     <>
-      <div className="announce" aria-label="Announcement">
-        <div className="announce-track">
-          {[...Array(2)].map((_, k) =>
-          <Fragment key={k}>
-              <span>NEW! CLVSTER CHAIN SEQUENCER</span><span className="dot"></span>
-              <span>VST3 · AU · AAX</span><span className="dot"></span>
-              <span>WIN & MAC (UPCOMING)</span><span className="dot"></span>
-              <span>FREE 14-DAY TRIAL</span><span className="dot"></span>
-              <span>NEW! CLVSTER CHAIN SEQUENCER</span><span className="dot"></span>
-              <span>VST3 · AU · AAX</span><span className="dot"></span>
-              <span>WIN & MAC (UPCOMING)</span><span className="dot"></span>
-              <span>FREE 14-DAY TRIAL</span><span className="dot"></span>
-            </Fragment>
-          )}
-        </div>
-      </div>
+      <Marquee mode={marqueeMode} />
 
       <header className="nav">
-        <a href="/" className="brand brand-xovnd" aria-label="XOVND home">
+        <a
+          href="/"
+          className="brand brand-xovnd"
+          aria-label="XOVND home — click to toggle the noise field"
+          onClick={onLogoClick}
+        >
           <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
         </a>
         <nav className="primary">

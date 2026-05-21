@@ -1,8 +1,17 @@
 'use client';
-import { useState, useEffect, useCallback, Fragment } from 'react';
+import { useState, useEffect, useCallback, useRef, Fragment } from 'react';
 
 // ─── Marquee ────────────────────────────────────────────────────────────
-export function Marquee() {
+// mode: 'text' (default scrolling announcements) | 'pattern' (animated
+// Perlin dot-grid that fills the strip — toggled from the SiteHeader logo)
+export function Marquee({ mode = 'text' }) {
+  if (mode === 'pattern') {
+    return (
+      <div className="announce announce-pattern">
+        <DotGridCanvas />
+      </div>
+    );
+  }
   const items = [
     'NEW! CLVSTER CHAIN SEQUENCER',
     'VST3 · AU · AAX',
@@ -27,13 +36,101 @@ export function Marquee() {
   );
 }
 
+// ─── DotGridCanvas ──────────────────────────────────────────────────────
+// Vanilla port of the p5 Perlin dot-grid sketch the user shared. Black
+// dots on yellow, dot diameter modulated by smooth 2D value noise;
+// the `offset` parameter is incremented per frame so the field flows.
+function DotGridCanvas() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const xScale = 0.05;
+    const yScale = 0.10;
+    const gap = 10;
+    const noise = makeValueNoise();
+    let raf = 0;
+    let offset = 0;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const r = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.floor(r.width * dpr));
+      canvas.height = Math.max(1, Math.floor(r.height * dpr));
+      canvas.__dpr = dpr;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function draw() {
+      const w = canvas.width;
+      const h = canvas.height;
+      const dpr = canvas.__dpr || 1;
+      ctx.fillStyle = '#E8D60E';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#000';
+      const g = gap * dpr;
+      for (let x = g / 2; x < w; x += g) {
+        for (let y = g / 2; y < h; y += g) {
+          const v = noise((x + offset) * xScale, (y + offset) * yScale);
+          const d = v * g;
+          ctx.beginPath();
+          ctx.arc(x, y, d / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      offset += 0.6;
+      raf = requestAnimationFrame(draw);
+    }
+    raf = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+  return <canvas ref={ref} className="announce-canvas" />;
+}
+
+// Smooth 2D value noise — small, dependency-free Perlin substitute.
+function makeValueNoise() {
+  const p = new Uint8Array(512);
+  for (let i = 0; i < 256; i++) p[i] = i;
+  for (let i = 255; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = p[i]; p[i] = p[j]; p[j] = t;
+  }
+  for (let i = 0; i < 256; i++) p[i + 256] = p[i];
+  const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+  const lerp = (a, b, t) => a + t * (b - a);
+  const hash = (ix, iy) => p[(p[ix & 255] + (iy & 255)) & 511] / 255;
+  return function noise(x, y) {
+    const ix = Math.floor(x), iy = Math.floor(y);
+    const fx = x - ix, fy = y - iy;
+    const u = fade(fx), v = fade(fy);
+    const a = lerp(hash(ix, iy),     hash(ix + 1, iy),     u);
+    const b = lerp(hash(ix, iy + 1), hash(ix + 1, iy + 1), u);
+    return lerp(a, b, v);
+  };
+}
+
 // ─── SiteHeader ─────────────────────────────────────────────────────────
 export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccountClick }) {
+  const [marqueeMode, setMarqueeMode] = useState('text');
+  const onLogoClick = (e) => {
+    e.preventDefault();
+    setMarqueeMode((m) => (m === 'text' ? 'pattern' : 'text'));
+  };
   return (
     <>
-      <Marquee />
+      <Marquee mode={marqueeMode} />
       <header className="nav">
-        <a href="/" className="brand brand-xovnd" aria-label="XOVND home">
+        <a
+          href="/"
+          className="brand brand-xovnd"
+          aria-label="XOVND home — click to toggle the noise field"
+          onClick={onLogoClick}
+        >
           <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
         </a>
         <nav className="primary">
