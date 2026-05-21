@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth, Marquee } from '@/components/shared';
+import { InfluencerModal, useInfluencerModal } from '@/components/InfluencerModal';
 
 
 /* -------------- DATA -------------- */
@@ -389,6 +390,39 @@ function HeroGenArt() {
 
 }
 
+/* -------------- BETA SECTION (closed-beta free download) -------------- */
+
+function BetaSection({ onClickGet }) {
+  return (
+    <section className="section beta-section" data-screen-label="Beta">
+      <div className="beta-shell">
+        <div className="beta-eyebrow">[ CLOSED BETA · INFLUENCERS &amp; EARLY TESTERS ]</div>
+        <h2>
+          Get the full <span className="alt">CLVSTER</span> build —{' '}
+          <span className="accent">free</span>, ahead of launch.
+        </h2>
+        <p className="beta-lead">
+          We&rsquo;re sending the v1.0.0 build to a small group of producers
+          and creators before the public release. Drop your details and
+          you&rsquo;ll get the Windows installer immediately — macOS lands in
+          the next round. Tag <b>@xovnd.audio</b> if you post anything cool.
+        </p>
+        <button className="btn btn-primary discover-glow beta-cta" onClick={onClickGet}>
+          Get the <span className="clvster-glow">free beta</span>{' '}
+          <span className="arrow">↓</span>
+        </button>
+        <div className="beta-meta">
+          <span>Windows · VST3</span>
+          <span className="sep">·</span>
+          <span>5 MB</span>
+          <span className="sep">·</span>
+          <span>14-day trial activates on install</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Hero({ onAdd }) {
   const videoRef = useRef(null);
   const [muted, setMuted] = useState(true);
@@ -695,10 +729,9 @@ function Footer() {
 
 /* -------------- CART -------------- */
 
-// Phase 2A: the cart is mostly decorative on the landing page; the real
-// purchase happens via Moonbase hosted checkout. This URL 404s today
+// Cart routes to Moonbase hosted checkout. The buy URL 404s today
 // because the CLVSTER product hasn't been published on Moonbase yet —
-// update MOONBASE_CHECKOUT below once Joan publishes the product.
+// just update MOONBASE_CHECKOUT here when it's live.
 const MOONBASE_CHECKOUT = 'https://xound.moonbase.sh/buy/clvster';
 
 function Cart({ open, onClose, items, onRemove }) {
@@ -809,6 +842,7 @@ function App() {
   const [toast, setToast] = useState("");
   const [loginOpen, setLoginOpen] = useState(false);
   const auth = useAuth();
+  const inflModal = useInfluencerModal();
 
   const addToCart = useCallback((p) => {
     setCart((c) => [...c, p]);
@@ -834,6 +868,8 @@ function App() {
     <>
       <Header cartCount={cart.length} onOpenCart={() => setCartOpen(true)} user={auth.user} onAccountClick={onAccountClick} />
       <Hero onAdd={addToCart} />
+      <BetaSection onClickGet={inflModal.openModal} />
+      <InfluencerModal open={inflModal.open} onClose={inflModal.closeModal} />
       {/* Walkthrough moved to its own route: /walkthrough */}
       <Manifesto />
       <Footer />
