@@ -160,7 +160,7 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
 
       <header className="nav">
         <a href="/" className="brand brand-xovnd" aria-label="XOVND home">
-          <img src="/assets/xovnd-logo.png" alt="XOVND" className="xovnd-logo" />
+          <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
         </a>
         <nav className="primary">
           <a href="#">VST Instruments</a>

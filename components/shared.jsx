@@ -34,7 +34,7 @@ export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccount
       <Marquee />
       <header className="nav">
         <a href="/" className="brand brand-xovnd" aria-label="XOVND home">
-          <img src="/assets/xovnd-logo.png" alt="XOVND" className="xovnd-logo" />
+          <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
         </a>
         <nav className="primary">
           <a href="/" className={current === 'products' ? 'current' : ''}>Products</a>
@@ -68,7 +68,7 @@ export function SiteFooter() {
     <footer className="foot">
       <div className="foot-brand">
         <div className="logo">
-          <img src="/assets/xovnd-logo.png" alt="XOVND" className="xovnd-logo" style={{ height: 36 }} />
+          <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" style={{ height: 36 }} />
         </div>
         <p>An independent software studio building creative audio instruments for producers, artists, and engineers.</p>
         <div className="socials" style={{ marginTop: 18 }}>

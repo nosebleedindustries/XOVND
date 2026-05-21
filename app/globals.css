@@ -16,22 +16,18 @@
 .brand.brand-xovnd img.xovnd-logo,
 .foot-brand .logo img.xovnd-logo {
   width: auto !important;
-  height: 56px !important;
+  height: 44px !important;
   display: block;
-  filter:
-    brightness(1.18) saturate(1.45) hue-rotate(-8deg)
-    drop-shadow(0 0 6px rgba(232,214,14,0.55))
-    drop-shadow(0 0 18px rgba(232,214,14,0.22));
+  filter: drop-shadow(0 0 10px rgba(232,214,14,0.35));
   transition: filter .25s ease, transform .25s ease;
 }
 .foot-brand .logo img.xovnd-logo {
-  height: 40px !important;
+  height: 32px !important;
 }
 .brand.brand-xovnd:hover img.xovnd-logo {
   filter:
-    brightness(1.32) saturate(1.6) hue-rotate(-8deg)
-    drop-shadow(0 0 10px rgba(232,214,14,0.75))
-    drop-shadow(0 0 24px rgba(232,214,14,0.35));
+    brightness(1.08)
+    drop-shadow(0 0 14px rgba(232,214,14,0.6));
 }
 
 /* ──── shared.css ──── */
