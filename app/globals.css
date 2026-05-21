@@ -16,13 +16,22 @@
 .brand.brand-xovnd img.xovnd-logo,
 .foot-brand .logo img.xovnd-logo {
   width: auto !important;
-  height: 44px !important;
   display: block;
   filter: drop-shadow(0 0 10px rgba(232,214,14,0.35));
   transition: filter .25s ease, transform .25s ease;
 }
+/* Header: oversized logo that breaks the bottom edge of the nav bar */
+.brand.brand-xovnd { align-self: stretch; }
+.brand.brand-xovnd img.xovnd-logo {
+  height: 110px !important;
+  margin-top: -18px;
+  margin-bottom: -54px;
+  position: relative;
+  z-index: 2;
+}
+/* Footer logo stays contained */
 .foot-brand .logo img.xovnd-logo {
-  height: 32px !important;
+  height: 44px !important;
 }
 .brand.brand-xovnd:hover img.xovnd-logo {
   filter:
