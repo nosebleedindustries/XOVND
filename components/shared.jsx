@@ -131,7 +131,9 @@ export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccount
           aria-label="XOVND home — click to toggle the noise field"
           onClick={onLogoClick}
         >
-          <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
+          <span className="brand-glow-ring">
+            <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
+          </span>
         </a>
         <nav className="primary">
           <a href="/" className={current === 'products' ? 'current' : ''}>Products</a>

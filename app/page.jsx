@@ -155,7 +155,9 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
           aria-label="XOVND home — click to toggle the noise field"
           onClick={onLogoClick}
         >
-          <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
+          <span className="brand-glow-ring">
+            <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
+          </span>
         </a>
         <nav className="primary">
           <a href="#">VST Instruments</a>

@@ -19,24 +19,74 @@
   display: block;
   transition: transform .25s ease;
 }
-/* Header: oversized logo that breaks the bottom edge of the nav bar.
-   mix-blend-mode: screen drops the JPG's black background and
-   border-radius clips any residual JPEG-compression noise at the
-   corners into a soft pillow shape. */
+/* Header: oversized logo with a traveling-glow rim (same effect as the
+   "Discover CLVSTER" hero CTA). The wrapper span carries the pillow
+   geometry + the conic-gradient pseudo-elements; the img inside just
+   fills it. mix-blend-mode: screen on the img drops the JPG's black
+   bg, and the wrapper's border-radius gives the soft pillow contour. */
 .brand.brand-xovnd { align-self: stretch; }
-.brand.brand-xovnd img.xovnd-logo {
-  height: 140px !important;
-  /* Push the pillow's top edge up through the announce strip (32px)
-     and the nav's top padding (14px) so it touches viewport y=0 */
-  margin-top: -46px;
-  margin-bottom: -88px;
+.brand-glow-ring {
+  display: inline-block;
   position: relative;
-  z-index: 60;        /* above the sticky header (z-index: 50) and marquee */
-  mix-blend-mode: screen;
+  isolation: isolate;
+  height: 140px;
+  margin-top: -46px;     /* pillow top touches viewport y=0 */
+  margin-bottom: -88px;
   border-radius: 32px;
+  z-index: 60;            /* above sticky header (z:50) + marquee */
   cursor: pointer;
 }
-/* Footer logo stays contained, same blend + pillow */
+.brand-glow-ring::before,
+.brand-glow-ring::after {
+  content: ""; position: absolute; inset: -3px;
+  border-radius: inherit;
+  z-index: -1;
+  padding: 3px;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    rgba(232,214,14,0.0) 200deg,
+    rgba(232,214,14,0.9) 280deg,
+    #fff 320deg,
+    var(--yellow) 340deg,
+    rgba(232,214,14,0.0) 360deg
+  );
+  animation: glowOrbit 3.4s linear infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+}
+.brand-glow-ring::after {
+  inset: -10px;
+  padding: 0;
+  filter: blur(12px);
+  opacity: 0.7;
+  -webkit-mask: none; mask: none;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg 250deg,
+    rgba(232,214,14,0.7) 300deg,
+    #fff 330deg,
+    transparent 360deg
+  );
+}
+.brand-glow-ring img.xovnd-logo {
+  height: 100% !important;
+  width: auto !important;
+  display: block;
+  border-radius: inherit;
+  mix-blend-mode: screen;
+}
+/* @property + @keyframes used by the discover-glow live further down
+   the file; re-declare here so the rim works even if that block isn't
+   reached/parsed first. Duplicate declarations are no-ops. */
+@property --glow-angle {
+  syntax: '<angle>'; initial-value: 0deg; inherits: false;
+}
+@keyframes glowOrbit { to { --glow-angle: 360deg; } }
+
+/* Footer logo stays contained, same blend + pillow, no glow */
 .foot-brand .logo img.xovnd-logo {
   height: 52px !important;
   mix-blend-mode: screen;
