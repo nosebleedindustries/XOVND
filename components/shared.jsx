@@ -153,7 +153,9 @@ export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccount
             href={user ? '/account' : '#'}
             onClick={(e) => { if (!user) { e.preventDefault(); onAccountClick && onAccountClick(); } }}
           >
-            {user ? (user.name || user.email.split('@')[0]) : 'Account'}
+            {user
+              ? (user.name || (user.email && user.email.split('@')[0]) || (user.type === 'beta' ? 'Beta tester' : user.type === 'buyer' ? 'Customer' : 'Account'))
+              : 'Account'}
           </a>
           <button className="nav-btn cart-btn" onClick={onOpenCart}>
             Cart <span className="cart-count">{cartCount}</span>
@@ -323,13 +325,36 @@ export function useCart() {
   };
 }
 
-// ─── useAuth stub ───────────────────────────────────────────────────────
-// Phase 2B.3 replaces this with real Supabase Auth.
+// ─── useAuth (localStorage-backed during closed beta) ──────────────────
+// Reads/writes the user redeemed via <AccessModal />. Phase 2B.3
+// swaps this for Supabase Auth without changing the call sites.
+const AUTH_KEY = 'xovnd_user';
+
 export function useAuth() {
   const [user, setUser] = useState(null);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem(AUTH_KEY);
+      if (raw) setUser(JSON.parse(raw));
+    } catch {}
+    const onStorage = (e) => {
+      if (e.key !== AUTH_KEY) return;
+      try { setUser(e.newValue ? JSON.parse(e.newValue) : null); } catch { setUser(null); }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
   return {
     user,
-    login: (email) => setUser({ email, name: email.split('@')[0] }),
-    logout: () => setUser(null),
+    login: (u) => {
+      const next = u && typeof u === 'object' ? u : { email: String(u || ''), name: String(u || '').split('@')[0] };
+      try { localStorage.setItem(AUTH_KEY, JSON.stringify(next)); } catch {}
+      setUser(next);
+    },
+    logout: () => {
+      try { localStorage.removeItem(AUTH_KEY); } catch {}
+      setUser(null);
+    },
   };
 }

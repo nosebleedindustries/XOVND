@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
+import { AccessModal, useAccessModal } from '@/components/AccessModal';
 
 /* XOVND support page — mail + live chat + tickets + satisfaction */
 
@@ -357,7 +358,7 @@ function SatisfactionBar() {
 function App() {
   const { cart, cartOpen, openCart, closeCart, addToCart, removeAt, toast: cartToast } = useCart();
   const auth = useAuth();
-  const [loginOpen, setLoginOpen] = useState(false);
+  const access = useAccessModal();
   const [tickets, setTickets] = useState(readJSON(SUP_TICKETS_KEY, []));
   const [toast, setToast] = useState("");
 
@@ -379,7 +380,7 @@ function App() {
     if (auth.user) {
       if (confirm(`Signed in as ${auth.user.email}\n\nSign out?`)) auth.logout();
     } else {
-      setLoginOpen(true);
+      access.openModal('code');
     }
   };
 
@@ -426,6 +427,7 @@ function App() {
 
       <SiteFooter />
       <CartDrawer open={cartOpen} onClose={closeCart} items={cart} onRemove={removeAt} />
+      <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
       {/* LoginModal stub — Phase 2B.3 Supabase Auth */}
       <div className={"toast" + (toast ? " show" : "")}>{toast}</div>
     </>

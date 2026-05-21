@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
+import { AccessModal, useAccessModal } from '@/components/AccessModal';
 
 /* Account page — profile, downloads (with 8-digit codes), subscription, messages, logout */
 
@@ -376,7 +377,7 @@ function MessagesPanel({ messages, setMessages, user, showToast }) {
 function AccountApp() {
   const { cart, cartOpen, openCart, closeCart, removeAt } = useCart();
   const auth = useAuth();
-  const [loginOpen, setLoginOpen] = useState(false);
+  const access = useAccessModal();
   const [open, setOpen] = useState("profile"); // profile|downloads|subscription|messages
   const [toast, setToast] = useState("");
   const showToast = (t) => { setToast(t); setTimeout(() => setToast(""), 2000); };
@@ -404,7 +405,7 @@ function AccountApp() {
     if (auth.user) {
       if (confirm("Sign out of " + auth.user.email + "?")) auth.logout();
     } else {
-      setLoginOpen(true);
+      access.openModal('code');
     }
   };
 
@@ -512,6 +513,7 @@ function AccountApp() {
       <SiteFooter />
 
       <CartDrawer open={cartOpen} onClose={closeCart} items={cart} onRemove={removeAt} />
+      <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
       <div className={"acc-toast" + (toast ? " show" : "")}>{toast}</div>
     </>
   );

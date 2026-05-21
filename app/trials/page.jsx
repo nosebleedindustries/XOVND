@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
+import { AccessModal, useAccessModal } from '@/components/AccessModal';
 
 const WinLogo = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -72,13 +73,13 @@ function Pillow({ p }) {
 export default function TrialsPage() {
   const { cart, cartOpen, openCart, closeCart, removeAt, toast } = useCart();
   const auth = useAuth();
-  const [loginOpen, setLoginOpen] = useState(false);
+  const access = useAccessModal();
 
   const onAccountClick = () => {
     if (auth.user) {
       if (confirm('Signed in as ' + auth.user.email + '\n\nSign out?')) auth.logout();
     } else {
-      setLoginOpen(true);
+      access.openModal('code');
     }
   };
 
@@ -106,6 +107,7 @@ export default function TrialsPage() {
 
       <SiteFooter />
       <CartDrawer open={cartOpen} onClose={closeCart} items={cart} onRemove={removeAt} />
+      <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
       <div className={'toast' + (toast ? ' show' : '')}>{toast}</div>
     </>
   );

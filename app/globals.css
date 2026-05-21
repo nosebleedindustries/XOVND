@@ -3739,6 +3739,28 @@ footer a:hover { color: var(--yellow); }
 }
 .beta-meta .sep { color: #2a2722; }
 
+/* AccessModal — code-redeem and request-access tabs share infl-* shell */
+.access-tabs { display: flex; gap: 4px; margin-bottom: 18px; padding: 4px; background: #15130f; border-radius: 999px; border: 1px solid #2a2722; }
+.access-tab {
+  flex: 1; padding: 8px 12px;
+  background: transparent; border: none;
+  color: #807a6c; cursor: pointer;
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  border-radius: 999px;
+  transition: background .15s, color .15s;
+}
+.access-tab.active { background: var(--yellow); color: #000; }
+.access-tab:hover:not(.active) { color: var(--white); }
+.access-error {
+  margin-top: 4px;
+  padding: 10px 12px;
+  background: rgba(212,168,174,0.12);
+  border: 1px solid rgba(212,168,174,0.3);
+  border-radius: 6px;
+  color: var(--pink); font-size: 12px;
+}
+
 /* Influencer-beta modal */
 .infl-overlay {
   position: fixed; inset: 0; z-index: 1000;

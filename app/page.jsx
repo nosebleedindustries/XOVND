@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth, Marquee } from '@/components/shared';
-import { InfluencerModal, useInfluencerModal } from '@/components/InfluencerModal';
+import { AccessModal, useAccessModal } from '@/components/AccessModal';
 
 
 /* -------------- DATA -------------- */
@@ -840,9 +840,8 @@ function App() {
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState("");
-  const [loginOpen, setLoginOpen] = useState(false);
   const auth = useAuth();
-  const inflModal = useInfluencerModal();
+  const access = useAccessModal();
 
   const addToCart = useCallback((p) => {
     setCart((c) => [...c, p]);
@@ -858,9 +857,10 @@ function App() {
 
   const onAccountClick = () => {
     if (auth.user) {
-      if (confirm(`Signed in as ${auth.user.email}\n\nSign out?`)) auth.logout();
+      const id = auth.user.code || auth.user.email || 'user';
+      if (confirm(`Signed in as ${id}\n\nSign out?`)) auth.logout();
     } else {
-      setLoginOpen(true);
+      access.openModal('code');
     }
   };
 
@@ -868,8 +868,8 @@ function App() {
     <>
       <Header cartCount={cart.length} onOpenCart={() => setCartOpen(true)} user={auth.user} onAccountClick={onAccountClick} />
       <Hero onAdd={addToCart} />
-      <BetaSection onClickGet={inflModal.openModal} />
-      <InfluencerModal open={inflModal.open} onClose={inflModal.closeModal} />
+      <BetaSection onClickGet={() => access.openModal('code')} />
+      <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
       {/* Walkthrough moved to its own route: /walkthrough */}
       <Manifesto />
       <Footer />

@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
+import { AccessModal, useAccessModal } from '@/components/AccessModal';
 
 /* XOVND forum — localStorage-backed, registered-users-only.
    Threads list ↔ thread detail with replies. */
@@ -335,7 +336,7 @@ function ForumApp() {
   const { cart, cartOpen, openCart, closeCart, addToCart, removeAt, toast } = useCart();
   const [threads, setThreads] = useState(readThreads());
   const [openId, setOpenId] = useState(null);
-  const [loginOpen, setLoginOpen] = useState(false);
+  const access = useAccessModal();
 
   const refresh = useCallback(() => setThreads(readThreads().slice().sort((a, b) => {
     if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
@@ -409,7 +410,7 @@ function ForumApp() {
     if (auth.user) {
       if (confirm(`Signed in as ${auth.user.email}\n\nSign out?`)) auth.logout();
     } else {
-      setLoginOpen(true);
+      access.openModal('code');
     }
   };
 
@@ -473,6 +474,7 @@ function ForumApp() {
       </div>
       <SiteFooter />
       <CartDrawer open={cartOpen} onClose={closeCart} items={cart} onRemove={removeAt} />
+      <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
       {/* LoginModal stub — Phase 2B.3 Supabase Auth */}
     </>);
 

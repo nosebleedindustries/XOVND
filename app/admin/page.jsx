@@ -2,13 +2,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 
-/* Minimal admin dashboard for the influencer-beta phase. Reads the
-   localStorage list captured by InfluencerModal and offers CSV export
-   so the captured leads can be moved into Mailchimp / spreadsheet /
-   whatever downstream tool. Phase 2B.9 replaces this with a real
-   Supabase-backed admin once auth is wired. */
+/* Minimal admin dashboard for the closed-beta phase.
+   - Top table: access requests (people who used the "Request access"
+     form in <AccessModal /> but don't yet have a code).
+   - Bottom strip: code redemption counter so we can see beta uptake.
+   Phase 2B.9 replaces all of this with a Supabase-backed admin. */
 
 const INFL_KEY = 'xovnd_influencers';
+const REDEEMED_KEY = 'xovnd_redeemed';
 
 function readList() {
   if (typeof window === 'undefined') return [];
@@ -41,14 +42,27 @@ function downloadBlob(name, content, type) {
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
 }
 
+function readRedeemed() {
+  if (typeof window === 'undefined') return [];
+  try { return JSON.parse(localStorage.getItem(REDEEMED_KEY) || '[]'); }
+  catch { return []; }
+}
+
 export default function AdminPage() {
   const { cart, cartOpen, openCart, closeCart, removeAt } = useCart();
   const auth = useAuth();
   const [rows, setRows] = useState([]);
+  const [redeemed, setRedeemed] = useState([]);
 
-  const refresh = useCallback(() => setRows(readList()), []);
+  const refresh = useCallback(() => {
+    setRows(readList());
+    setRedeemed(readRedeemed());
+  }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  const buyerCount = redeemed.filter(r => r.type === 'buyer').length;
+  const betaCount  = redeemed.filter(r => r.type === 'beta').length;
 
   const onExport = () => {
     const stamp = new Date().toISOString().slice(0, 10);
@@ -98,12 +112,27 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <p style={{ color: '#807a6c', fontSize: 13, margin: '0 0 28px' }}>
+        <p style={{ color: '#807a6c', fontSize: 13, margin: '0 0 20px' }}>
           Captured locally in <code style={{ background: '#15130f', padding: '2px 6px', borderRadius: 4 }}>localStorage[&quot;{INFL_KEY}&quot;]</code> —
           per-browser only. Export to CSV to move them into Mailchimp / a
           spreadsheet / your CRM. Supabase migration in Phase 2B.9 will
           centralise this server-side.
         </p>
+
+        <div style={{ display: 'flex', gap: 12, marginBottom: 28 }}>
+          <div style={{ flex: 1, padding: 16, border: '1px solid #2a2722', borderRadius: 10, background: '#0d0c0a' }}>
+            <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: '0.14em', color: '#807a6c', textTransform: 'uppercase' }}>Beta codes redeemed</div>
+            <div style={{ fontFamily: "'Archivo Black', sans-serif", fontSize: 28, color: 'var(--yellow)', marginTop: 4 }}>{betaCount}</div>
+          </div>
+          <div style={{ flex: 1, padding: 16, border: '1px solid #2a2722', borderRadius: 10, background: '#0d0c0a' }}>
+            <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: '0.14em', color: '#807a6c', textTransform: 'uppercase' }}>Buyer codes redeemed</div>
+            <div style={{ fontFamily: "'Archivo Black', sans-serif", fontSize: 28, color: 'var(--pink)', marginTop: 4 }}>{buyerCount}</div>
+          </div>
+          <div style={{ flex: 1, padding: 16, border: '1px solid #2a2722', borderRadius: 10, background: '#0d0c0a' }}>
+            <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: '0.14em', color: '#807a6c', textTransform: 'uppercase' }}>Access requests</div>
+            <div style={{ fontFamily: "'Archivo Black', sans-serif", fontSize: 28, color: 'var(--white)', marginTop: 4 }}>{rows.length}</div>
+          </div>
+        </div>
 
         {rows.length === 0 ? (
           <div style={{ padding: 48, textAlign: 'center', border: '1px dashed #2a2722', borderRadius: 12, color: '#6a6557' }}>
