@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 import { AccessModal, useAccessModal } from '@/components/AccessModal';
+import { AccountModal, useAccountModal } from '@/components/AccountModal';
 
 /* Subscription plans page */
 
@@ -102,11 +103,11 @@ function App() {
   const { cart, cartOpen, openCart, closeCart, addToCart, removeAt, toast } = useCart();
   const auth = useAuth();
   const access = useAccessModal();
+  const accountModal = useAccountModal();
 
   const onAccountClick = () => {
     if (auth.user) {
-      const id = auth.user.code || auth.user.email || 'user';
-      if (confirm(`Signed in as ${id}\n\nSign out?`)) auth.logout();
+      accountModal.openModal();
     } else {
       access.openModal('code');
     }
@@ -175,6 +176,7 @@ function App() {
 
       <CartDrawer open={cartOpen} onClose={closeCart} items={cart} onRemove={removeAt} />
       <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
+      <AccountModal open={accountModal.open} onClose={accountModal.closeModal} user={auth.user} onLogout={auth.logout} />
       {/* LoginModal stub — Phase 2B.3 Supabase Auth */}
       <div className={"toast" + (toast ? " show" : "")} style={{
         position: "fixed", bottom: 24, left: "50%",

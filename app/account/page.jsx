@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 import { AccessModal, useAccessModal } from '@/components/AccessModal';
+import { AccountModal, useAccountModal } from '@/components/AccountModal';
 
 /* Account page — profile, downloads (with 8-digit codes), subscription, messages, logout */
 

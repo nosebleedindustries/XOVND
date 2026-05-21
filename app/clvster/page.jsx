@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 import { AccessModal, useAccessModal } from '@/components/AccessModal';
+import { AccountModal, useAccountModal } from '@/components/AccountModal';
 
 /* CLVSTER product detail page */
 
@@ -777,6 +778,7 @@ function App() {
   const { cart, cartOpen, openCart, closeCart, addToCart, removeAt, toast } = useCart();
   const auth = useAuth();
   const access = useAccessModal();
+  const accountModal = useAccountModal();
   // Phase 2A: Buy buttons route straight to Moonbase hosted checkout —
   // they handle MoR, VAT, localised currency, card forms. The local cart
   // UI stays in the codebase for Phase 2B (multi-product cart + custom
@@ -789,8 +791,7 @@ function App() {
 
   const onAccountClick = () => {
     if (auth.user) {
-      const id = auth.user.code || auth.user.email || 'user';
-      if (confirm(`Signed in as ${id}\n\nSign out?`)) auth.logout();
+      accountModal.openModal();
     } else {
       access.openModal('code');
     }
@@ -816,6 +817,7 @@ function App() {
 
       <CartDrawer open={cartOpen} onClose={closeCart} items={cart} onRemove={removeAt} />
       <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
+      <AccountModal open={accountModal.open} onClose={accountModal.closeModal} user={auth.user} onLogout={auth.logout} />
       <Tweaks />
       {/* LoginModal stub — Phase 2B.3 replaces with Supabase Auth. */}
       <div className={"toast" + (toast ? " show" : "")}>{toast}</div>

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 import { AccessModal, useAccessModal } from '@/components/AccessModal';
+import { AccountModal, useAccountModal } from '@/components/AccountModal';
 
 const WinLogo = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -74,11 +75,11 @@ export default function TrialsPage() {
   const { cart, cartOpen, openCart, closeCart, removeAt, toast } = useCart();
   const auth = useAuth();
   const access = useAccessModal();
+  const accountModal = useAccountModal();
 
   const onAccountClick = () => {
     if (auth.user) {
-      const id = auth.user.code || auth.user.email || 'user';
-      if (confirm('Signed in as ' + id + '\n\nSign out?')) auth.logout();
+      accountModal.openModal();
     } else {
       access.openModal('code');
     }
@@ -109,6 +110,7 @@ export default function TrialsPage() {
       <SiteFooter />
       <CartDrawer open={cartOpen} onClose={closeCart} items={cart} onRemove={removeAt} />
       <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
+      <AccountModal open={accountModal.open} onClose={accountModal.closeModal} user={auth.user} onLogout={auth.logout} />
       <div className={'toast' + (toast ? ' show' : '')}>{toast}</div>
     </>
   );

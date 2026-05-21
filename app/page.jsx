@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth, Marquee } from '@/components/shared';
 import { AccessModal, useAccessModal } from '@/components/AccessModal';
+import { AccountModal, useAccountModal } from '@/components/AccountModal';
 
 
 /* -------------- DATA -------------- */
@@ -844,6 +845,7 @@ function App() {
   const [toast, setToast] = useState("");
   const auth = useAuth();
   const access = useAccessModal();
+  const accountModal = useAccountModal();
 
   const addToCart = useCallback((p) => {
     setCart((c) => [...c, p]);
@@ -859,8 +861,7 @@ function App() {
 
   const onAccountClick = () => {
     if (auth.user) {
-      const id = auth.user.code || auth.user.email || 'user';
-      if (confirm(`Signed in as ${id}\n\nSign out?`)) auth.logout();
+      accountModal.openModal();
     } else {
       access.openModal('code');
     }
@@ -872,6 +873,7 @@ function App() {
       <Hero onAdd={addToCart} />
       <BetaSection onClickGet={() => access.openModal('code')} />
       <AccessModal open={access.open} initialTab={access.initialTab} onClose={access.closeModal} />
+      <AccountModal open={accountModal.open} onClose={accountModal.closeModal} user={auth.user} onLogout={auth.logout} />
       {/* Walkthrough moved to its own route: /walkthrough */}
       <Manifesto />
       <Footer />

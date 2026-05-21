@@ -3739,6 +3739,81 @@ footer a:hover { color: var(--yellow); }
 }
 .beta-meta .sep { color: #2a2722; }
 
+/* AccountModal — shown when the user clicks their nav name */
+.acct-modal { max-width: 480px; }
+.acct-row {
+  display: grid; grid-template-columns: 110px 1fr; gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid #2a2722;
+}
+.acct-row:first-of-type { border-top: 1px solid #2a2722; }
+.acct-label {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; color: #807a6c; text-transform: uppercase;
+  padding-top: 2px;
+}
+.acct-value { font-size: 14px; color: var(--white); }
+.acct-license-code {
+  font-family: 'Space Mono', monospace; font-size: 13px;
+  color: var(--yellow); letter-spacing: 0.06em;
+  word-break: break-all;
+}
+.acct-license-type { font-size: 12px; color: #b4b0a3; margin-top: 4px; }
+.acct-license-since { font-size: 11px; color: #6a6557; margin-top: 2px; font-family: 'Space Mono', monospace; }
+.acct-coupon-active {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: rgba(232,214,14,0.10);
+  border: 1px solid rgba(232,214,14,0.35);
+  border-radius: 6px;
+}
+.acct-coupon-active code {
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--yellow); letter-spacing: 0.06em;
+}
+.acct-link {
+  background: transparent; border: none; color: #6a6557;
+  cursor: pointer; font-family: inherit; font-size: 11px;
+  text-decoration: underline; padding: 0;
+}
+.acct-link:hover { color: var(--pink); }
+.acct-coupon-form { display: flex; gap: 6px; }
+.acct-coupon-form input {
+  flex: 1; background: #15130f; color: var(--white);
+  border: 1px solid #2a2722; border-radius: 6px;
+  padding: 9px 11px; font-size: 13px; font-family: inherit;
+}
+.acct-coupon-form input:focus { outline: none; border-color: var(--yellow); }
+.acct-coupon-form button {
+  background: var(--yellow); color: #000;
+  border: none; border-radius: 6px;
+  padding: 9px 16px; font-weight: 700; font-size: 12px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer;
+}
+.acct-coupon-form button:disabled { background: #2a2722; color: #6a6557; cursor: not-allowed; }
+.acct-msg { margin-top: 8px; font-size: 11px; color: #807a6c; }
+.acct-actions {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #2a2722;
+}
+.acct-btn {
+  padding: 11px 14px;
+  border-radius: 8px; font-family: inherit; font-size: 13px;
+  font-weight: 600; letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.acct-btn.ghost  { background: transparent; color: var(--white); border: 1px solid #2a2722; }
+.acct-btn.warn   { background: transparent; color: #D4A8AE; border: 1px solid rgba(212,168,174,0.35); }
+.acct-btn.danger { background: transparent; color: #ff6b6b; border: 1px solid rgba(255,107,107,0.35); }
+.acct-btn.ghost:hover  { background: #15130f; border-color: #3a352d; }
+.acct-btn.warn:hover   { background: rgba(212,168,174,0.10); border-color: var(--pink); }
+.acct-btn.danger:hover { background: rgba(255,107,107,0.10); border-color: #ff6b6b; }
+
 /* OAuth (Google / Apple) buttons at top of the AccessModal */
 .oauth-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
 .oauth-btn {
