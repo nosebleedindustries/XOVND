@@ -144,7 +144,7 @@ function Tweaks() {
 
 /* -------- Hero -------- */
 const DEFAULT_CAROUSEL = [
-  { src: "/assets/clvster-ui.png", label: "UI · 01", kind: "image" }];
+  { src: "/assets/clvster-promo.mp4", label: "Promo · 01", kind: "video" }];
 
 
 function ProductCarousel() {
