@@ -19,9 +19,13 @@ const CATEGORIES = [
 const CAT_BY_ID = Object.fromEntries(CATEGORIES.map((c) => [c.id, c]));
 
 function readThreads() {
+  if (typeof window === 'undefined') return [];
   try {return JSON.parse(localStorage.getItem(FLX_THREADS) || "[]");} catch {return [];}
 }
-function writeThreads(list) {localStorage.setItem(FLX_THREADS, JSON.stringify(list));}
+function writeThreads(list) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(FLX_THREADS, JSON.stringify(list));
+}
 
 /* Seed a couple of example threads on first load */
 function seedIfEmpty() {
@@ -412,8 +416,14 @@ function ForumApp() {
   const openThread = openId ? threads.find((t) => t.id === openId) : null;
 
   // category filter
-  const [category, setCategory] = useState(localStorage.getItem(FLX_CATEGORY) || "all");
-  useEffect(() => {localStorage.setItem(FLX_CATEGORY, category);}, [category]);
+  const [category, setCategory] = useState(() => {
+    if (typeof window === 'undefined') return "all";
+    return localStorage.getItem(FLX_CATEGORY) || "all";
+  });
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(FLX_CATEGORY, category);
+  }, [category]);
   const visibleThreads = useMemo(() => {
     if (category === "all") return threads;
     return threads.filter((t) => t.category === category);

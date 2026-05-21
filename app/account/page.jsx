@@ -10,8 +10,14 @@ const ACC_MSG_KEY     = "xovnd_user_messages";
 
 /* ---------- helpers ---------- */
 
-function readObj(k, fb) { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } }
-function writeObj(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function readObj(k, fb) {
+  if (typeof window === 'undefined') return fb;
+  try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; }
+}
+function writeObj(k, v) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(k, JSON.stringify(v));
+}
 
 function randomCode8() {
   let s = "";

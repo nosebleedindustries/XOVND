@@ -10,10 +10,14 @@ const SUP_CHAT_KEY = "xovnd_support_chat";
 const SUP_SAT_KEY = "xovnd_support_sat";
 
 function readJSON(k, fallback) {
+  if (typeof window === 'undefined') return fallback;
   try { return JSON.parse(localStorage.getItem(k) || JSON.stringify(fallback)); }
   catch { return fallback; }
 }
-function writeJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function writeJSON(k, v) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(k, JSON.stringify(v));
+}
 function relTime(iso) {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
   if (diff < 60) return "just now";
