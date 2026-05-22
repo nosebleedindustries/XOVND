@@ -723,7 +723,7 @@ function Footer() {
         </div>
       </div>
       <div className="foot-bottom">
-        <span>© 2026 XOVND Audio — All sounds reserved</span>
+        <span>© 2026 XOVND Audio — All sounds reserved · <a href="/privacy">Privacy</a></span>
         <span>Mastered in Brooklyn / Built worldwide</span>
       </div>
     </footer>);

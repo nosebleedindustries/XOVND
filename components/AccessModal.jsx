@@ -26,6 +26,9 @@ export const BUYER_CODES = [
   'BUY-XOVND-2026-005',
 ];
 export const BETA_CODES = [
+  // 7 pre-existing + 13 fresh for the first influencer wave.
+  // Assign codes 1:1 to influencers in the outreach spreadsheet so
+  // /admin redemption rows attribute back to a specific person.
   'BETA-XOVND-MIRA',
   'BETA-XOVND-JULES',
   'BETA-XOVND-WREN',
@@ -33,6 +36,19 @@ export const BETA_CODES = [
   'BETA-XOVND-DIA',
   'BETA-XOVND-OPEN-001',
   'BETA-XOVND-OPEN-002',
+  'BETA-XOVND-OPEN-003',
+  'BETA-XOVND-OPEN-004',
+  'BETA-XOVND-OPEN-005',
+  'BETA-XOVND-OPEN-006',
+  'BETA-XOVND-OPEN-007',
+  'BETA-XOVND-OPEN-008',
+  'BETA-XOVND-OPEN-009',
+  'BETA-XOVND-OPEN-010',
+  'BETA-XOVND-OPEN-011',
+  'BETA-XOVND-OPEN-012',
+  'BETA-XOVND-OPEN-013',
+  'BETA-XOVND-OPEN-014',
+  'BETA-XOVND-OPEN-015',
 ];
 const PLATFORMS = ['Instagram', 'YouTube', 'TikTok', 'X / Twitter', 'Twitch', 'Other'];
 

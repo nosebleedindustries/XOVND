@@ -3814,6 +3814,60 @@ footer a:hover { color: var(--yellow); }
 .acct-btn.warn:hover   { background: rgba(212,168,174,0.10); border-color: var(--pink); }
 .acct-btn.danger:hover { background: rgba(255,107,107,0.10); border-color: #ff6b6b; }
 
+/* Legal / privacy page */
+.legal-shell {
+  max-width: 760px; margin: 0 auto;
+  padding: 64px 28px 96px;
+  color: #d7d3c5; line-height: 1.65;
+}
+.legal-eyebrow {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 0.18em; color: var(--yellow); margin-bottom: 12px;
+}
+.legal-shell h1 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(34px, 4vw, 52px); line-height: 1; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--white);
+}
+.legal-meta { font-size: 13px; color: #807a6c; margin: 0 0 32px; font-family: 'Space Mono', monospace; }
+.legal-shell h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 22px; margin: 40px 0 12px; color: var(--yellow);
+}
+.legal-shell p { font-size: 15px; margin: 0 0 14px; text-wrap: pretty; }
+.legal-shell ul { padding-left: 22px; margin: 0 0 16px; }
+.legal-shell li { font-size: 15px; margin-bottom: 6px; }
+.legal-shell a { color: var(--yellow); text-decoration: underline; }
+.legal-shell a:hover { color: var(--white); }
+.legal-shell b { color: var(--white); }
+
+/* Cookie consent banner — bottom strip, hidden after choice */
+.cookie-banner {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+  background: #0d0c0a;
+  border-top: 1px solid #2a2722;
+  padding: 14px 24px;
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.4);
+}
+.cookie-shell {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+}
+.cookie-banner p { margin: 0; font-size: 13px; color: #b4b0a3; flex: 1 1 320px; line-height: 1.5; }
+.cookie-banner a { color: var(--yellow); text-decoration: underline; }
+.cookie-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.cookie-btn {
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer;
+}
+.cookie-btn.ghost { background: transparent; color: #d7d3c5; border: 1px solid #2a2722; }
+.cookie-btn.ghost:hover { border-color: var(--white); }
+.cookie-btn.primary { background: var(--yellow); color: #000; border: none; }
+.cookie-btn.primary:hover { transform: translateY(-1px); }
+
 /* OAuth (Google / Apple) buttons at top of the AccessModal */
 .oauth-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
 .oauth-btn {

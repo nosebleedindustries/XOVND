@@ -1,5 +1,6 @@
 import './globals.css';
 import Providers from '@/components/Providers';
+import CookieBanner from '@/components/CookieBanner';
 
 export const metadata = {
   title: 'XOVND — Tools for sound',
@@ -25,7 +26,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body><Providers>{children}</Providers></body>
+      <body><Providers>{children}<CookieBanner /></Providers></body>
     </html>
   );
 }

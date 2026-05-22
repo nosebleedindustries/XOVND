@@ -218,7 +218,7 @@ export function SiteFooter() {
           <li><a href="#">Blog</a></li>
           <li><a href="#">Jobs</a></li>
           <li><a href="#">Press Kit</a></li>
-          <li><a href="#">Privacy</a></li>
+          <li><a href="/privacy">Privacy</a></li>
         </ul>
       </div>
       <div className="foot-bottom">
