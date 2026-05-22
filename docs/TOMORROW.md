@@ -1,6 +1,6 @@
 # Tomorrow — actionable TODO
 
-Snapshot of the actionable backlog as of 2026-05-21.
+Snapshot of the actionable backlog as of 2026-05-22.
 Update this file after each session so we never lose state.
 
 ---
@@ -20,24 +20,20 @@ Update this file after each session so we never lose state.
 
 ---
 
-## 🟥 Blockers — must do tomorrow (≈ 1.5 h)
+## ✅ Unblocked 2026-05-22 — sales are LIVE
 
-### Publish CLVSTER on Moonbase
-- Log in to https://moonbase.sh dashboard → **New product**
-- Slug **must** be `clvster` (matches `productId` baked into the plugin's
-  `Resources/Licensing/moonbase_api_config.json` — DO NOT change it)
-- Name: `CLVSTER`
-- Price: €79 (or whatever final pricing — change later if needed)
-- Upload: `C:\Users\stala\Documents\KantianOctoSeq\Installer\Output\CLVSTER-1.0.0-Win.exe`
-- Enable JUCE SDK / Moonbase license delivery — plugin already validates
-- Publish
-- **Verify**: `https://xound.moonbase.sh/buy/clvster` returns 200 (no longer 404)
-- **Test buy** with a real card → confirm receipt + buyer code arrive
+- CLVSTER product published on Moonbase
+  - id: `clvster` · price: 45,00 €  (launch discount -2,25 € auto-applied → 42,75 € total)
+  - checkout URL: https://xound.moonbase.sh/buy/clvster
+  - confirmed reachable from signed-in customer flow
+- xovnd.com buy buttons already point at the correct URL (no code change needed)
+- Duplicate `clvster-101` set to Inactive (delete when convenient)
 
-### Wire the issued buyer code into the site
-- Send Joan the buyer code Moonbase issued (e.g. `BUY-XOVND-LIVE-001`)
-- Joan adds it to `BUYER_CODES` array in `components/AccessModal.jsx`
-  and pushes — ~5 min
+### Next: first real purchase test
+- [ ] Joan does a real card purchase end-to-end → confirm receipt + license code arrives
+- [ ] Paste the issued buyer-code format to me — I add it to `BUYER_CODES`
+      in `components/AccessModal.jsx` (5 min push)
+- [ ] Plug a tester (anyone else) → real second sale → verify a different code
 
 ---
 
