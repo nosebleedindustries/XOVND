@@ -1604,18 +1604,26 @@ footer a:hover { color: var(--yellow); }
     padding: 3px 7px; letter-spacing: 0.1em;
     z-index: 2;
   }
+  /* Carousel nav — white "<" ">" chevrons in negative (white-on-black)
+     inside a perfect circle, sitting just inside the left / right edges
+     of the slide. Hover lifts to yellow. */
   .ph-card .car-nav {
     position: absolute; top: 50%; transform: translateY(-50%);
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(0,0,0,0.55); color: var(--white);
-    border: 1px solid rgba(232,214,14,0.3);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(0,0,0,0.78); color: #fff;
+    border: 1.5px solid #fff;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 4; transition: all .15s;
-    font-family: 'Space Mono', monospace; font-size: 16px;
+    cursor: pointer; z-index: 4;
+    transition: background .15s, color .15s, border-color .15s, transform .15s;
+    padding: 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
   }
-  .ph-card .car-nav:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow);}
-  .ph-card .car-nav.prev { left: 10px;}
-  .ph-card .car-nav.next { right: 10px;}
+  .ph-card .car-nav:hover {
+    background: var(--yellow); color: var(--black); border-color: var(--yellow);
+    transform: translateY(-50%) scale(1.06);
+  }
+  .ph-card .car-nav.prev { left: 14px;}
+  .ph-card .car-nav.next { right: 14px;}
   .ph-card .car-dots {
     position: absolute; bottom: 12px; left: 50%;
     transform: translateX(-50%);
@@ -1786,33 +1794,121 @@ footer a:hover { color: var(--yellow); }
     color: var(--pink); text-transform: uppercase; letter-spacing: 0.14em;
     margin-bottom: 14px;
   }
-  .ph-logo {
-    width: min(70%, 280px); height: auto; display: block;
-    mix-blend-mode: screen;
-    margin: 0 0 28px -2px;
-    animation: clvsterGlitch 4.6s steps(1, end) infinite;
-    will-change: filter, transform, opacity;
+  /* CLVSTER pillow-video logo — ported from the VST UI's .clvster-pillow.
+     Pill-shaped puff with a looping MP4 inside + a thin rotating
+     conic-gradient comet rim + glossy diagonal reflection + soft sheen.
+     Replaces the earlier glitchy raster (clvster-logo.jpg + the
+     clvsterGlitch keyframes). */
+  @property --pb-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
   }
-  @keyframes clvsterGlitch {
-    0%, 14%    { filter: saturate(0) brightness(2.6) contrast(1.4); transform: none; opacity: 1; }
-    15%        { filter: saturate(0) brightness(2.6) contrast(1.4); transform: translate(-2px, 1px) skewX(-2deg); }
-    16%        { transform: translate(2px, -1px) skewX(2deg); }
-    17%        { transform: translate(-1px, 0); }
-    18%, 36%   { transform: none; filter: saturate(0) brightness(2.8) contrast(1.5); }
-    37%        { opacity: 0.18; filter: saturate(0) brightness(0.6); }
-    38%        { opacity: 1; filter: saturate(0) brightness(3); }
-    39%, 58%   { filter: saturate(0) brightness(2.6) contrast(1.4); }
-    59%        { transform: translate(3px, 0) skewX(-4deg); filter: saturate(0) brightness(2.8) contrast(1.6); clip-path: inset(40% 0 30% 0); }
-    60%        { transform: translate(-3px, 0) skewX(3deg); clip-path: inset(10% 0 60% 0); }
-    61%        { transform: none; clip-path: none; }
-    62%, 78%   { filter: saturate(0) brightness(2.4) contrast(1.4); }
-    79%        { opacity: 0; }
-    80%        { opacity: 1; filter: saturate(0) brightness(3.2); }
-    81%        { opacity: 0.4; }
-    82%, 94%   { opacity: 1; filter: saturate(0) brightness(2.6); }
-    95%        { transform: translate(2px, -1px); filter: saturate(0) brightness(2.8); }
-    96%        { transform: translate(-2px, 1px); }
-    97%, 100%  { transform: none; filter: saturate(0) brightness(2.6) contrast(1.4); }
+  @keyframes pb-spin { to { --pb-angle: 360deg; } }
+  .ph-pillow {
+    position: relative;
+    display: inline-grid; place-items: center;
+    width: min(70%, 320px);
+    aspect-ratio: 3 / 1;
+    border-radius: 9999px;
+    margin: 0 0 28px -2px;
+    --g1: #ffd1e0;
+    --g2: #ff8fb4;
+    --g3: #ffd1e0;
+    --spin-dur: 6s;
+    --glow-blur: 6px;
+    --glow-spread: 4px;
+    --glow-opacity: 0.85;
+    --rim-thickness: 1px;
+    --refl-angle: 115deg;
+    --refl-strength: 0.35;
+    --refl-blur: 14px;
+  }
+  .ph-pillow > .glow {
+    position: absolute; inset: calc(var(--glow-spread) * -1);
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--pb-angle),
+      transparent 0%, transparent 44%,
+      var(--g1) 48%, var(--g2) 50%, var(--g3) 52%,
+      transparent 56%, transparent 100%);
+    filter: blur(var(--glow-blur)) saturate(150%);
+    opacity: var(--glow-opacity);
+    animation: pb-spin var(--spin-dur) linear infinite;
+    z-index: 0; pointer-events: none;
+    will-change: --pb-angle, transform;
+  }
+  .ph-pillow > .body {
+    position: relative; z-index: 2;
+    width: 100%; height: 100%;
+    border-radius: inherit; overflow: hidden;
+    background: #0a0a0e;
+    box-shadow:
+      0 24px 60px -10px rgba(0,0,0,.65),
+      0 8px 20px -6px rgba(0,0,0,.55),
+      inset 0 2px 0 rgba(255,255,255,.18),
+      inset 0 14px 28px -10px rgba(255,255,255,.22),
+      inset 0 -2px 0 rgba(0,0,0,.55),
+      inset 0 -18px 32px -10px rgba(0,0,0,.55);
+  }
+  .ph-pillow .body > video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    z-index: 1;
+  }
+  .ph-pillow .body > .refl {
+    position: absolute; inset: -10%;
+    border-radius: inherit; pointer-events: none; z-index: 2;
+    background: linear-gradient(
+      var(--refl-angle),
+      transparent 30%,
+      rgba(255,255,255,calc(var(--refl-strength) * .55)) 44%,
+      rgba(255,255,255,var(--refl-strength)) 50%,
+      rgba(255,255,255,calc(var(--refl-strength) * .55)) 56%,
+      transparent 70%);
+    filter: blur(var(--refl-blur));
+    mix-blend-mode: screen; opacity: .95;
+  }
+  .ph-pillow .body > .sheen {
+    position: absolute; inset: 0;
+    border-radius: inherit; pointer-events: none; z-index: 2;
+    background:
+      radial-gradient(120% 70% at 50% -10%, rgba(255,255,255,.22), rgba(255,255,255,0) 55%),
+      radial-gradient(120% 80% at 50% 115%, rgba(0,0,0,.45), rgba(0,0,0,0) 55%),
+      linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,0) 18%, rgba(0,0,0,0) 82%, rgba(0,0,0,.18));
+    mix-blend-mode: soft-light;
+  }
+  .ph-pillow > .rim {
+    position: absolute; inset: -1px;
+    border-radius: inherit; padding: var(--rim-thickness);
+    background: conic-gradient(
+      from var(--pb-angle),
+      transparent 0%, transparent 42%,
+      var(--g1) 47%, var(--g2) 50%, var(--g3) 53%,
+      transparent 58%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: pb-spin var(--spin-dur) linear infinite;
+    filter: saturate(180%) brightness(1.15);
+    z-index: 3; pointer-events: none;
+  }
+  .ph-pillow > .pearl {
+    position: absolute; inset: -1px;
+    border-radius: inherit; padding: var(--rim-thickness);
+    background: conic-gradient(
+      from var(--pb-angle),
+      transparent 0%, transparent 48%,
+      var(--g2) 50%,
+      transparent 52%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: pb-spin var(--spin-dur) linear infinite;
+    filter: blur(1px) brightness(1.5);
+    z-index: 4; pointer-events: none;
   }
   .ph-right h1 {
     font-family: 'Archivo Black'; font-size: clamp(24px, 3.2vw, 46px);

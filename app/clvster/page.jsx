@@ -146,7 +146,8 @@ function Tweaks() {
 
 /* -------- Hero -------- */
 const DEFAULT_CAROUSEL = [
-  { src: "/assets/clvster-promo.mp4", label: "Promo · 01", kind: "video" }];
+  { src: "/assets/clvster-promo.mp4", label: "Promo · 01", kind: "video" },
+  { src: "/assets/clvster-beauty-v11.png", label: "Beauty shot · v1.1", kind: "image" }];
 
 
 function ProductCarousel() {
@@ -338,8 +339,20 @@ function ProductCarousel() {
 
         {photos.length > 1 &&
         <Fragment>
-            <button className="car-nav prev" onClick={() => go(-1)} aria-label="Previous">‹</button>
-            <button className="car-nav next" onClick={() => go(1)} aria-label="Next">›</button>
+            <button className="car-nav prev" onClick={() => go(-1)} aria-label="Previous">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.6"
+                strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button className="car-nav next" onClick={() => go(1)} aria-label="Next">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.6"
+                strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
             <div className="car-dots">
               {photos.map((_, i) =>
             <span key={i} className={"dot" + (i === idx ? " active" : "")} onClick={() => setIdx(i)}></span>
@@ -393,7 +406,21 @@ function ProductHero({ onBuy }) {
         </div>
       </div>
       <div className="ph-right">
-        <img src="/assets/clvster-logo.jpg" alt="CLVSTER" className="ph-logo" />
+        {/* CLVSTER logo — pillow-video, same component the VST UI uses.
+            Looping branding MP4 inside a pill, rotating conic-gradient
+            comet rim glow, glossy reflection + sheen. Replaces the
+            earlier glitchy raster. */}
+        <div className="ph-pillow" role="img" aria-label="CLVSTER">
+          <div className="glow" />
+          <div className="body">
+            <video src="/assets/clvster-pillow-loop.mp4"
+              autoPlay loop muted playsInline />
+            <div className="refl" />
+            <div className="sheen" />
+          </div>
+          <div className="rim" />
+          <div className="pearl" />
+        </div>
         <div className="ph-eyebrow">[ NEW · v1.0.2 · ALGORITHMIC SEQUENCER ]</div>
         <h1>Clusters, not steps.<br /><span className="alt">Explorative</span>.</h1>
         <ul className="bullets">
