@@ -1020,12 +1020,14 @@ footer a:hover { color: var(--yellow); }
     gap: 10px; padding: 40px 16px 48px;
     overflow: hidden;
   }
-  .hero-logo {
-    width: min(86%, 720px); height: auto; display: block;
-    mix-blend-mode: screen;
+  /* .hero-logo (old glitchy raster) removed — landing-page hero now
+     uses .hero-pillow which extends the shared .ph-pillow class with
+     a larger width to dominate the hero area. */
+  .hero-pillow {
+    width: min(86%, 720px);
+    aspect-ratio: 3 / 1;
     position: relative; z-index: 2;
-    animation: clvsterGlitch 4.6s steps(1, end) infinite;
-    will-change: filter, transform, opacity;
+    margin: 0 auto;
   }
   .hero-tagline {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
