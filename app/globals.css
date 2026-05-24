@@ -1024,10 +1024,11 @@ footer a:hover { color: var(--yellow); }
      uses .hero-pillow which extends the shared .ph-pillow class with
      a larger width to dominate the hero area. */
   .hero-pillow {
-    width: min(86%, 720px);
+    /* Bigger + nudged up over the HeroGenArt sitting behind it. */
+    width: min(98%, 920px);
     aspect-ratio: 3 / 1;
     position: relative; z-index: 2;
-    margin: 0 auto;
+    margin: -56px auto 0;
   }
   .hero-tagline {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
