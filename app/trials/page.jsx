@@ -27,9 +27,12 @@ const TRIALS = [
     ],
     cta: 'Download CLVSTER Demo',
     meta: 'Windows 10/11 · 64-bit · No account required',
-    // Public Moonbase store page for CLVSTER — hosts the demo download +
-    // the buy flow. Opens in a new tab so the trials page stays put.
-    downloadUrl: 'https://xound.moonbase.sh/buy/clvster',
+    // Direct download of the installer hosted in public/downloads/. Bypasses
+    // Moonbase's buy page (which only exposes the purchase flow, not a
+    // standalone trial link). The plugin's own built-in 14-day trial mode
+    // kicks in once the user installs without a Moonbase license.
+    downloadUrl: '/downloads/CLVSTER-1.0.0-Win.exe',
+    downloadFilename: 'CLVSTER-1.0.0-Win.exe',
   },
   {
     id: 'kantian-free',
@@ -66,7 +69,7 @@ function Pillow({ p }) {
       <div className="dl-row">
         {p.downloadUrl ? (
           <a className="dl-btn" href={p.downloadUrl}
-             target="_blank" rel="noopener noreferrer">
+             download={p.downloadFilename || undefined}>
             <span>{p.cta}</span>
             <span className="arrow">↓</span>
           </a>
