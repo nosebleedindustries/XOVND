@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { SiteHeader, SiteFooter, CartDrawer, useCart, useAuth } from '@/components/shared';
 import { AccessModal, useAccessModal } from '@/components/AccessModal';
 import { AccountModal, useAccountModal } from '@/components/AccountModal';
@@ -28,6 +27,9 @@ const TRIALS = [
     ],
     cta: 'Download CLVSTER Demo',
     meta: 'Windows 10/11 · 64-bit · No account required',
+    // Public Moonbase store page for CLVSTER — hosts the demo download +
+    // the buy flow. Opens in a new tab so the trials page stays put.
+    downloadUrl: 'https://xound.moonbase.sh/buy/clvster',
   },
   {
     id: 'kantian-free',
@@ -43,6 +45,10 @@ const TRIALS = [
     ],
     cta: 'Download KANTIAN',
     meta: 'Windows 10/11 · 64-bit · Ableton Suite required',
+    // TODO: drop a real .amxd URL here once hosted (GitHub Releases /
+    // Vercel Blob / S3). Left undefined for now so the button renders
+    // as "Coming soon" instead of pretending to start a download.
+    downloadUrl: null,
   },
 ];
 
@@ -58,10 +64,19 @@ function Pillow({ p }) {
         ))}
       </div>
       <div className="dl-row">
-        <button className="dl-btn" onClick={() => alert('Download for ' + p.name + ' (' + p.edition + ') starting…')}>
-          <span>{p.cta}</span>
-          <span className="arrow">↓</span>
-        </button>
+        {p.downloadUrl ? (
+          <a className="dl-btn" href={p.downloadUrl}
+             target="_blank" rel="noopener noreferrer">
+            <span>{p.cta}</span>
+            <span className="arrow">↓</span>
+          </a>
+        ) : (
+          <button className="dl-btn" disabled
+                  style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+            <span>Coming soon</span>
+            <span className="arrow">⋯</span>
+          </button>
+        )}
         <button className="os" title="Windows installer" aria-label="Windows installer">
           <WinLogo />
         </button>
