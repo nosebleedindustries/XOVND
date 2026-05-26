@@ -152,7 +152,7 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
           onClick={onLogoClick}
         >
           <span className={'brand-glow-ring' + (springing ? ' springing' : '')}>
-            <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" />
+            <img src="/assets/xovnd-logo.png" alt="XOVND" className="xovnd-logo" />
           </span>
         </a>
         <nav className="primary">
@@ -718,7 +718,7 @@ function Footer() {
     <footer className="foot">
       <div className="foot-brand">
         <div className="logo">
-          <img src="/assets/xovnd-logo.jpg" alt="XOVND" className="xovnd-logo" style={{ height: 36 }} />
+          <img src="/assets/xovnd-logo.png" alt="XOVND" className="xovnd-logo" style={{ height: 36 }} />
         </div>
         <p>An independent software studio building creative audio instruments for producers, artists, and engineers.</p>
         <div className="socials" style={{ marginTop: 18 }}>
