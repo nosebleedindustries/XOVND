@@ -437,30 +437,48 @@ function Hero({ onAdd }) {
     if (!next) { v.play().catch(() => {}); }
     setMuted(next);
   };
-  // Browsers block autoplay-with-audio until the user interacts with the
-  // page. Listen once for any user gesture and unmute as soon as it fires
-  // so the video has sound by the time the visitor actually engages.
+  // The landing video stays paused + silent until the visitor moves the
+  // mouse into the page (or otherwise interacts). On that first signal
+  // we kick off playback and try to unmute. mousemove alone isn't always
+  // a "sticky user activation" per the HTML5 spec, so audio may stay
+  // muted in some browsers until a real gesture (click / scroll / key)
+  // fires too — we listen for all of them and unmute on whichever
+  // arrives first. Worst case the video plays muted and the visitor
+  // clicks the speaker icon.
   useEffect(() => {
-    let done = false;
-    const unmute = () => {
-      if (done) return;
+    let kickedOff = false;
+    const trigger = () => {
+      if (kickedOff) return;
       const v = videoRef.current;
       if (!v) return;
-      done = true;
+      kickedOff = true;
       v.muted = false;
-      v.play().catch(() => {});
+      v.play().catch(() => {
+        // unmuted play was blocked — fall back to muted autoplay so the
+        // visitor at least sees the visuals start.
+        v.muted = true;
+        v.play().catch(() => {});
+        setMuted(true);
+        return;
+      });
       setMuted(false);
-      window.removeEventListener('pointerdown', unmute);
-      window.removeEventListener('keydown', unmute);
-      window.removeEventListener('scroll', unmute);
+      window.removeEventListener('mousemove',  trigger);
+      window.removeEventListener('pointerdown', trigger);
+      window.removeEventListener('keydown',     trigger);
+      window.removeEventListener('scroll',      trigger);
+      window.removeEventListener('touchstart',  trigger);
     };
-    window.addEventListener('pointerdown', unmute, { once: false });
-    window.addEventListener('keydown', unmute, { once: false });
-    window.addEventListener('scroll', unmute, { once: false, passive: true });
+    window.addEventListener('mousemove',  trigger, { once: false });
+    window.addEventListener('pointerdown', trigger, { once: false });
+    window.addEventListener('keydown',     trigger, { once: false });
+    window.addEventListener('scroll',      trigger, { once: false, passive: true });
+    window.addEventListener('touchstart',  trigger, { once: false, passive: true });
     return () => {
-      window.removeEventListener('pointerdown', unmute);
-      window.removeEventListener('keydown', unmute);
-      window.removeEventListener('scroll', unmute);
+      window.removeEventListener('mousemove',  trigger);
+      window.removeEventListener('pointerdown', trigger);
+      window.removeEventListener('keydown',     trigger);
+      window.removeEventListener('scroll',      trigger);
+      window.removeEventListener('touchstart',  trigger);
     };
   }, []);
   return (
@@ -522,7 +540,6 @@ The result? A fully interactive, live algorithmic rave experience. 🕺🔊REAL-
           <video
             ref={videoRef}
             src="/assets/clvster-promo.mp4"
-            autoPlay
             loop
             muted
             playsInline
