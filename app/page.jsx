@@ -520,22 +520,9 @@ The result? A fully interactive, live algorithmic rave experience. 🕺🔊REAL-
       </div>
       <div className="hero-right">
         <HeroGenArt />
-        {/* CLVSTER pillow-video logo — same component the VST UI + the
-            clvster product page use. Looping branding MP4 inside a pill
-            with rotating conic-gradient comet rim + glossy sheen.
-            Replaces the earlier glitchy raster (clvster-logo.jpg). */}
-        <div className="hero-pillow ph-pillow" role="img" aria-label="CLVSTER">
-          <div className="glow" />
-          <div className="body">
-            <video src="/assets/clvster-pillow-loop.mp4"
-              autoPlay loop muted playsInline />
-            <div className="refl" />
-            <div className="sheen" />
-          </div>
-          <div className="rim" />
-          <div className="pearl" />
-        </div>
-        <div className="hero-tagline" style={{ letterSpacing: "3.9px", padding: "3.19995px 0px 0px" }}>Cluster Chain Sequencer</div>
+        {/* Promo video moved up — the CLVSTER pillow-video logo that used
+            to sit above this was removed so the hero now leads with the
+            full promo cut. Tagline + ticker stay below the video. */}
         <div className="hero-mark hero-ui video-flash-in" style={{ position: "relative" }}>
           <video
             ref={videoRef}
