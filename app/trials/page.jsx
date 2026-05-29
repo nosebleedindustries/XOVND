@@ -27,12 +27,14 @@ const TRIALS = [
     ],
     cta: 'Download CLVSTER Demo',
     meta: 'Windows 10/11 · 64-bit · No account required',
-    // Direct download of the installer hosted in public/downloads/. Bypasses
-    // Moonbase's buy page (which only exposes the purchase flow, not a
-    // standalone trial link). The plugin's own built-in 14-day trial mode
-    // kicks in once the user installs without a Moonbase license.
-    downloadUrl: '/downloads/CLVSTER-1.0.0-Win.exe',
-    downloadFilename: 'CLVSTER-1.0.0-Win.exe',
+    // Direct download of the installer hosted in public/downloads/. The
+    // filename is intentionally version-less so this URL stays stable
+    // across releases — the current shipped version is embedded in the
+    // binary's VersionInfo. Bypasses Moonbase's buy page (which only
+    // exposes the purchase flow, not a standalone trial link); the
+    // plugin's own built-in 14-day trial mode kicks in on first run.
+    downloadUrl: '/downloads/CLVSTER-Win.exe',
+    downloadFilename: 'CLVSTER-Win.exe',
   },
   {
     id: 'kantian-free',
@@ -43,15 +45,13 @@ const TRIALS = [
     lede: 'Our Max for Live transcendental sequencer — free and unrestricted. Just drop it into an Ableton MIDI track and go.',
     specs: [
       { k: 'Format', v: 'Max for Live' },
-      { k: 'Size',   v: '12 MB' },
+      { k: 'Size',   v: '480 KB' },
       { k: 'Req.',   v: 'Live 11 · Max 8.5+' },
     ],
     cta: 'Download KANTIAN',
-    meta: 'Windows 10/11 · 64-bit · Ableton Suite required',
-    // TODO: drop a real .amxd URL here once hosted (GitHub Releases /
-    // Vercel Blob / S3). Left undefined for now so the button renders
-    // as "Coming soon" instead of pretending to start a download.
-    downloadUrl: null,
+    meta: 'Ableton Suite (Max for Live) required · any OS',
+    downloadUrl: '/downloads/KANTIAN.amxd',
+    downloadFilename: 'KANTIAN.amxd',
   },
 ];
 
