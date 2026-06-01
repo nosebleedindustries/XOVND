@@ -426,7 +426,7 @@ function BetaSection({ onClickGet }) {
   );
 }
 
-const PROMO_VIDEOS = ["/assets/clvster-promo.mp4", "/assets/clvster-demo-4.mp4"];
+const PROMO_VIDEOS = ["/assets/clvster-promo.mp4", "/assets/clvster-demo-4.webm"];
 
 function Hero({ onAdd }) {
   const videoRef = useRef(null);
