@@ -426,9 +426,27 @@ function BetaSection({ onClickGet }) {
   );
 }
 
+const PROMO_VIDEOS = ["/assets/clvster-promo.mp4", "/assets/clvster-demo-4.mp4"];
+
 function Hero({ onAdd }) {
   const videoRef = useRef(null);
   const [muted, setMuted] = useState(true);
+  const [vidIdx, setVidIdx] = useState(0);
+  const didMountVid = useRef(false);
+  const goVid = (dir) =>
+    setVidIdx((i) => (i + dir + PROMO_VIDEOS.length) % PROMO_VIDEOS.length);
+  // When the visitor travels to another promo cut, load + play it carrying
+  // the current mute state. Skip the very first run so the initial video
+  // keeps its "paused + silent until interaction" behaviour (below).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!didMountVid.current) { didMountVid.current = true; return; }
+    const v = videoRef.current;
+    if (!v) return;
+    v.load();
+    v.muted = muted;
+    v.play().catch(() => {});
+  }, [vidIdx]);
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
@@ -526,13 +544,50 @@ The result? A fully interactive, live algorithmic rave experience. 🕺🔊REAL-
         <div className="hero-mark hero-ui video-flash-in" style={{ position: "relative" }}>
           <video
             ref={videoRef}
-            src="/assets/clvster-promo.mp4"
+            src={PROMO_VIDEOS[vidIdx]}
             loop
             muted
             playsInline
             preload="metadata"
             style={{ width: "100%", height: "auto", display: "block" }}
           />
+          {PROMO_VIDEOS.length > 1 && (
+            <>
+              <button
+                type="button"
+                className="video-nav-btn prev"
+                aria-label="Previous video"
+                onClick={() => goVid(-1)}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="video-nav-btn next"
+                aria-label="Next video"
+                onClick={() => goVid(1)}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+              <div className="video-dots" role="tablist" aria-label="Choose video">
+                {PROMO_VIDEOS.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    role="tab"
+                    className={"video-dot" + (i === vidIdx ? " active" : "")}
+                    aria-label={"Video " + (i + 1)}
+                    aria-selected={i === vidIdx}
+                    onClick={() => setVidIdx(i)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
           <button
             type="button"
             className="video-mute-btn"
