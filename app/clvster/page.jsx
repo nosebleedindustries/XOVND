@@ -748,7 +748,12 @@ function Details() {
             <div style={{ fontFamily: "'Archivo Black'", fontSize: 18, marginBottom: 4 }}>Get the free trial</div>
             <div style={{ fontSize: 13, color: "#807a6c" }}>14-day full-feature trial. No credit card required.</div>
           </div>
-          <button className="btn btn-primary">Download trial <span className="arrow">→</span></button>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <a className="btn btn-ghost" href="/downloads/CLVSTER-Quickstart.pdf" download="CLVSTER-Quickstart.pdf">
+              Documentation <span className="arrow">↓</span>
+            </a>
+            <button className="btn btn-primary">Download trial <span className="arrow">→</span></button>
+          </div>
         </div>
       </div>
     </section>);

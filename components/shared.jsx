@@ -119,6 +119,7 @@ function makeValueNoise() {
 export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccountClick }) {
   const [marqueeMode, setMarqueeMode] = useState('text');
   const [springing, setSpringing] = useState(false);
+  const [instOpen, setInstOpen] = useState(false);
   const onLogoClick = (e) => {
     e.preventDefault();
     setMarqueeMode((m) => (m === 'text' ? 'pattern' : 'text'));
@@ -141,6 +142,28 @@ export function SiteHeader({ cartCount = 0, onOpenCart, current, user, onAccount
         </a>
         <nav className="primary">
           <a href="/" className={current === 'products' ? 'current' : ''}>Products</a>
+          <div
+            className={'nav-dd' + (instOpen ? ' open' : '')}
+            onMouseEnter={() => setInstOpen(true)}
+            onMouseLeave={() => setInstOpen(false)}
+          >
+            <button
+              type="button"
+              className={'nav-dd-btn' + (current === 'instruments' ? ' current' : '')}
+              aria-expanded={instOpen}
+              onClick={() => setInstOpen((o) => !o)}
+            >
+              VST Instruments <span className="nav-dd-caret">▾</span>
+            </button>
+            <div className="nav-dd-menu" role="menu">
+              <a href="/clvster" role="menuitem">
+                <b>CLVSTER</b><span>Sequencer</span>
+              </a>
+              <a href="/skvvelch" role="menuitem">
+                <b>SKVVELCH</b><span>Synth</span>
+              </a>
+            </div>
+          </div>
           <a href="/trials" className={current === 'trials' ? 'current' : ''}>
             Trials<span className="badge">14d</span>
           </a>
