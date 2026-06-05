@@ -134,6 +134,7 @@ const VIZ = { knobs: KnobViz, wave: WaveViz, grid: GridViz, clvster: ClvsterViz,
 function Header({ cartCount, onOpenCart, user, onAccountClick }) {
   const [marqueeMode, setMarqueeMode] = useState('text');
   const [springing, setSpringing] = useState(false);
+  const [instOpen, setInstOpen] = useState(false);
   const onLogoClick = (e) => {
     e.preventDefault();
     setMarqueeMode((m) => (m === 'text' ? 'pattern' : 'text'));
@@ -156,7 +157,24 @@ function Header({ cartCount, onOpenCart, user, onAccountClick }) {
           </span>
         </a>
         <nav className="primary">
-          <a href="#">VST Instruments</a>
+          <div
+            className={'nav-dd' + (instOpen ? ' open' : '')}
+            onMouseEnter={() => setInstOpen(true)}
+            onMouseLeave={() => setInstOpen(false)}
+          >
+            <button
+              type="button"
+              className="nav-dd-btn"
+              aria-expanded={instOpen}
+              onClick={() => setInstOpen((o) => !o)}
+            >
+              VST Instruments <span className="nav-dd-caret">▾</span>
+            </button>
+            <div className="nav-dd-menu" role="menu">
+              <a href="/clvster" role="menuitem"><b>CLVSTER</b><span>Sequencer</span></a>
+              <a href="/skvvelch" role="menuitem"><b>SKVVELCH</b><span>Synth</span></a>
+            </div>
+          </div>
           <a href="#">Max4Live FREE!</a>
           <a href="/trials">Trials<span className="badge">14d</span></a>
           <a href="/subscription">Subscriptions</a>
