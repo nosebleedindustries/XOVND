@@ -8,8 +8,29 @@ import { AccountModal, useAccountModal } from '@/components/AccountModal';
 
 const SUPPORT_ADDR = "XOVND@tech.help";
 const SUP_TICKETS_KEY = "xovnd_tickets";
-const SUP_CHAT_KEY = "xovnd_support_chat";
 const SUP_SAT_KEY = "xovnd_support_sat";
+
+/* Documentation available for download on the support page */
+const SUPPORT_DOCS = [
+  {
+    id: "clvster-quickstart",
+    tag: "CLVSTER",
+    title: "Quickstart Manual",
+    desc: "The 8-page guide — workflow, the four algorithms, harmony, locking, and the snapshot sequencer.",
+    meta: "PDF · 8 pages",
+    href: "/downloads/CLVSTER-Quickstart.pdf",
+    file: "CLVSTER-Quickstart.pdf",
+    ready: true,
+  },
+  {
+    id: "skvvelch-manual",
+    tag: "SKVVELCH",
+    title: "Synth Manual",
+    desc: "Full reference for the SKVVELCH synth — arriving with the plugin.",
+    meta: "Coming soon",
+    ready: false,
+  },
+];
 
 function readJSON(k, fallback) {
   if (typeof window === 'undefined') return fallback;
@@ -205,106 +226,40 @@ function TicketsCard({ tickets, user, onToggle }) {
   );
 }
 
-/* ---------------- Live chat ---------------- */
+/* ---------------- Documentation downloads ---------------- */
 
-function Chat({ user }) {
-  const seed = [{
-    role: "bot",
-    text: "Hi! I'm Lyra, the XOVND support assistant. I can help with installation, license activation, common bugs, or any plugin question. What's going on?",
-    at: new Date().toISOString(),
-  }];
-  const [messages, setMessages] = useState(() => readJSON(SUP_CHAT_KEY, seed));
-  const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  const bodyRef = useRef(null);
-
-  useEffect(() => { writeJSON(SUP_CHAT_KEY, messages); }, [messages]);
-  useEffect(() => {
-    if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
-  }, [messages, busy]);
-
-  const send = async () => {
-    const v = input.trim();
-    if (!v || busy) return;
-    const userMsg = { role: "user", text: v, at: new Date().toISOString() };
-    const next = [...messages, userMsg];
-    setMessages(next);
-    setInput("");
-    setBusy(true);
-    try {
-      const history = next.slice(-12).map(m => ({
-        role: m.role === "bot" ? "assistant" : "user",
-        content: m.text,
-      }));
-      const system = `You are Lyra, a friendly, concise support agent for XOVND Audio — a small independent audio plugin company. Their flagship products are CLVSTER (an algorithmic step sequencer with "clusters" and "ALGO MODS") and RUBBER (a physical-modelling synth). Plugin formats: VST3, AU, AAX. Free 14-day trial on every plugin. Pricing in euros. Subscription tiers: All Products €9/mo, All Products + Beta €15/mo. Help the user diagnose problems, point them to the right step, and stay warm but brief — 3-5 sentences max. If you don't know something, say so and offer to open a ticket to ${SUPPORT_ADDR}.`;
-      const reply = await window.claude.complete({
-        messages: [{ role: "user", content: system }, ...history],
-      });
-      setMessages((cur) => [...cur, { role: "bot", text: reply.trim(), at: new Date().toISOString() }]);
-    } catch (err) {
-      setMessages((cur) => [...cur, {
-        role: "bot",
-        text: "Lyra is offline right now. Please use the mail form above and we'll get back to you within 4 hours.",
-        at: new Date().toISOString(),
-      }]);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onKey = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send();
-    }
-  };
-
-  const clear = () => {
-    if (confirm("Clear the chat history?")) {
-      setMessages(seed);
-    }
-  };
-
+function DocsCard() {
   return (
-    <div className="chat-card">
-      <div className="chat-head">
-        <div className="who">
-          <div className="avatar">L</div>
-          <div>
-            <div className="name">Lyra · Live support</div>
-            <div className="status">Online · Avg reply &lt; 30s</div>
-          </div>
-        </div>
-        <button className="chat-clear" onClick={clear}>Clear chat</button>
-      </div>
-      <div className="chat-body" ref={bodyRef}>
-        {messages.map((m, i) => (
-          <div key={i} className={"msg " + m.role}>
-            <div className="avatar-sm">{m.role === "bot" ? "L" : (user?.name?.[0] || user?.email?.[0] || "Y").toUpperCase()}</div>
-            <div>
-              <div className="bubble">{m.text}</div>
-              <div className="ts">{timeOnly(m.at)}</div>
+    <div className="docs-card">
+      <div className="panel-kicker">[ Documentation ]</div>
+      <h2>Manuals &amp; downloads</h2>
+      <p className="docs-intro">Guides and reference material for your XOVND instruments — grab the PDF and keep it next to your DAW.</p>
+      <div className="docs-list">
+        {SUPPORT_DOCS.map((d) => (
+          <div key={d.id} className={"docs-row" + (d.ready ? "" : " soon")}>
+            <div className="docs-ic" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+                <path d="M14 3v5h5"/>
+                <path d="M9 13h6M9 17h5"/>
+              </svg>
             </div>
+            <div className="docs-meta">
+              <div className="docs-title">
+                <span className="docs-tag">{d.tag}</span>{d.title}
+              </div>
+              <div className="docs-desc">{d.desc}</div>
+              <div className="docs-sub">{d.meta}</div>
+            </div>
+            {d.ready ? (
+              <a className="docs-dl" href={d.href} download={d.file}>
+                Download <span>↓</span>
+              </a>
+            ) : (
+              <span className="docs-dl disabled">Soon</span>
+            )}
           </div>
         ))}
-        {busy && (
-          <div className="msg bot">
-            <div className="avatar-sm">L</div>
-            <div className="bubble"><div className="typing"><span></span><span></span><span></span></div></div>
-          </div>
-        )}
-      </div>
-      <div className="chat-input">
-        <textarea
-          placeholder="Tell Lyra what's happening… (Enter to send · Shift+Enter for newline)"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={onKey}
-          rows={1}
-        />
-        <button className="chat-send" onClick={send} disabled={!input.trim() || busy} aria-label="Send">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-        </button>
       </div>
     </div>
   );
@@ -416,13 +371,13 @@ function App() {
             <div className="eyebrow">[ Support · we answer everything ]</div>
             <h1>Stuck? <span className="alt">We're here.</span></h1>
           </div>
-          <p className="lead">Real humans replying within 4 hours on weekdays. Mail us, chat with Lyra in real time, or track your tickets below.</p>
+          <p className="lead">Real humans replying within 4 hours on weekdays. Mail us, grab the docs, or track your tickets below.</p>
         </div>
 
         <div className="sup-grid">
           <MailForm user={auth.user} onSent={onSent} />
           <TicketsCard tickets={tickets} user={auth.user} onToggle={onToggle} />
-          <Chat user={auth.user} />
+          <DocsCard />
           <SatisfactionBar />
         </div>
       </div>

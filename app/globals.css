@@ -3482,6 +3482,65 @@ footer a:hover { color: var(--yellow); }
     color: var(--pink); letter-spacing: 0.18em; text-transform: uppercase;
   }
 
+  /* documentation downloads */
+  .docs-card {
+    grid-column: 1 / -1;
+    background: var(--charcoal); border: 1px solid #2a2722;
+    padding: 26px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .docs-card .panel-kicker {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--pink); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .docs-card h2 {
+    font-family: 'Archivo Black'; font-size: 22px; margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .docs-intro { margin: 0; color: #b5b0a2; font-size: 14px; line-height: 1.5; max-width: 640px; }
+  .docs-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+  .docs-row {
+    display: grid; grid-template-columns: 46px 1fr auto; gap: 18px; align-items: center;
+    background: var(--black); border: 1px solid #2a2722; border-radius: 10px;
+    padding: 16px 20px; transition: border-color .15s ease, background .15s ease;
+  }
+  .docs-row:hover { border-color: #3a3630; background: #15130f; }
+  .docs-row.soon { opacity: 0.55; }
+  .docs-ic {
+    width: 46px; height: 46px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(232, 214, 14, 0.08); border: 1px solid #3a3630; color: var(--yellow);
+  }
+  .docs-title {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    font-family: 'Archivo Black'; font-size: 15px; color: var(--white); letter-spacing: -0.005em;
+  }
+  .docs-tag {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 400;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--black); background: var(--yellow);
+    padding: 2px 7px; border-radius: 4px;
+  }
+  .docs-desc { margin: 6px 0 0; color: #b5b0a2; font-size: 13px; line-height: 1.45; }
+  .docs-sub {
+    margin-top: 6px; font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: #807a6c;
+  }
+  .docs-dl {
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+    font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; text-decoration: none;
+    color: var(--black); background: var(--yellow);
+    padding: 11px 18px; border-radius: 999px;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .docs-dl:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(232,214,14,0.25); }
+  .docs-dl span { font-size: 14px; }
+  .docs-dl.disabled {
+    color: #807a6c; background: transparent; border: 1px solid #3a3630;
+    pointer-events: none;
+  }
+
   /* mail form */
   .mail-form { display: flex; flex-direction: column; gap: 12px; }
   .mail-form .from {
@@ -3719,6 +3778,8 @@ footer a:hover { color: var(--yellow); }
     .mail-form .row { grid-template-columns: 1fr;}
     .ticket-strip { grid-template-columns: 1fr;}
     .sat-card { flex-direction: column; align-items: flex-start;}
+    .docs-row { grid-template-columns: 46px 1fr; row-gap: 14px; }
+    .docs-dl { grid-column: 1 / -1; justify-content: center; }
   }
 
 /* ──── inline styles from trials.html ──── */
