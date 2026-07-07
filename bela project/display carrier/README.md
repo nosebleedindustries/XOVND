@@ -25,6 +25,16 @@ ribbon satellite in front.
 
 Board ≈ **184 × 73 mm**, 2-layer, AISLER rules.
 
+## Assembled stack height (fully seated)
+Measured from the factory 3D models with the 2×18 male header (carrier) fully mated into
+a female socket on the sandwich top: **total PCB-stack height ≈ 42.2 mm** (device base → display glass).
+- PocketBeagle 2 (PCB + headers): 0 → 8.7 mm
+- Bela Gem (mated cape, PCB 11.7–13.3): jacks/connectors up to 21.8 mm
+- Bela→carrier 2×18 male+female (fully seated, ~7 mm): carrier PCB 28.9–30.5 mm
+- T-Display module → glass top: **42.24 mm**
+
+Add the 1 mm aluminium enclosure + top/bottom clearances (~3–5 mm) for the external height.
+
 ## Notes / to refine
 - The `TDisplayS3Long` footprint's **mounting-hole positions are estimates** + the active-
   area seam offset should be verified against the factory DWG (`dimensions/` in the LILYGO
