@@ -1254,24 +1254,24 @@
 		
 		(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_2x18_P2.54mm_Vertical.step"
 			(offset
-				(xyz -21.6 11.5 -1.5)
+				(xyz 21.6 11.5 -1.5)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz -180 -0 90)
+				(xyz 0 -0 90)
 			)
 		)
 		(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_2x18_P2.54mm_Vertical.step"
 			(offset
-				(xyz -21.6 -11.5 -1.5)
+				(xyz 21.6 -11.5 -1.5)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz -180 -0 90)
+				(xyz 0 -0 90)
 			)
 		)
 	)
