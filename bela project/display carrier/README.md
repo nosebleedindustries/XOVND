@@ -24,7 +24,17 @@ Board ≈ **184 × 73 mm**, 2-layer, AISLER rules.
   repo) or a physical unit — then nudge the two modules for a perfect join.
 - 3D model = the factory **`H685-PCB-3D.stp`** (from `T-Display-S3-Long-PCB-3D.zip`, LILYGO
   GitHub `dimensions/`) — not committed (7.75 MB); the footprint references it by path.
-- **Not yet routed** — placement + nets done, DRC clean of shorts. Route next (Freerouting + GND).
+
+## Routing (done)
+**Fully routed + fab-ready.** Freerouting 2.2.4, 2-layer (both signal). A parallel **clearance
+sweep** {0.15, 0.175, 0.20, 0.25 mm} picked **0.25 mm** as the loosest that still routes clean
+(most fab margin), then **GND poured on F.Cu + B.Cu** (solid pad connection), netclass clearance
+**0.15 mm** (AISLER). Result: **0 unconnected, 68 tracks, 1 via, 0 hard DRC** (only 2 cosmetic
+silk warnings — DS ref field near the edge + DS1/DS2 silk-rect overlap). Authoritative check =
+`kicad-cli pcb drc` (verified: 0 shorting, 0 clearance, GND filled both layers, connectors on B.Cu).
+Scripts: `scripts/carrier_export_dsn.py` (DSN, strips fp graphics by text so KiCad's exporter
+doesn't choke on the big display outlines) + `scripts/carrier_route_variant.py <µm>` (one full
+clearance variant → JSON). Routed back-side view: `renders/carrier_routed_bottom.png`.
 
 ## Power (rev: dedicated input)
 The two AMOLEDs are hungry (~0.4–1 A peak), so they are **NOT** powered from the Beagle rail.
