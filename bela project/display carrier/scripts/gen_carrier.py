@@ -20,11 +20,13 @@ PARTS = {
     "U1":  ("PB2",             "PocketBeagle2",     "PB2 stack",  100.0,  62.0,   0),  # sandwich to Beagle+Bela
     "JA":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_A", "1x5",    55.0,  47.0,   0),  # cable to panel A
     "JB":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_B", "1x5",   143.8,  47.0,   0),  # cable to panel B
+    "J_PWR":("TerminalBlock_bornier-2_P5.08mm","PWR_IN","+5V/GND", 16.0,  64.0,   0),  # dedicated 5V from the main PSU
 }
-# JA/JB pin order: 1=+5V 2=GND 3=TX 4=RX 5=RST
+# JA/JB pin order: 1=+5V 2=GND 3=TX 4=RX 5=RST  ·  J_PWR: 1=+5V 2=GND
+# Displays powered from J_PWR (NOT the Beagle rail); PB2 sandwich carries only GND + data.
 NETS = {
-    "+5V":    [("U1","P2.13"),("JA","1"),("JB","1")],
-    "GND":    [("U1","P1.16"),("U1","P2.15"),("JA","2"),("JB","2")],
+    "+5V":    [("J_PWR","1"),("JA","1"),("JB","1")],
+    "GND":    [("J_PWR","2"),("U1","P1.16"),("U1","P2.15"),("JA","2"),("JB","2")],   # common GND: PSU + Beagle + panels
     "DA_TX":  [("U1","P1.29"),("JA","3")],   # PRU0.7 -> panel A
     "DA_RX":  [("U1","P1.31"),("JA","4")],   # PRU0.4 <- panel A
     "DA_RST": [("U1","P1.4"),("JA","5")],    # GPIO89

@@ -20,3 +20,9 @@ Board ≈ **184 × 73 mm**, 2-layer, AISLER rules.
 - 3D model = the factory **`H685-PCB-3D.stp`** (from `T-Display-S3-Long-PCB-3D.zip`, LILYGO
   GitHub `dimensions/`) — not committed (7.75 MB); the footprint references it by path.
 - **Not yet routed** — placement + nets done, DRC clean of shorts. Route next (Freerouting + GND).
+
+## Power (rev: dedicated input)
+The two AMOLEDs are hungry (~0.4–1 A peak), so they are **NOT** powered from the Beagle rail.
+- **`J_PWR`** (2-pin screw terminal) = **+5V / GND** straight from the main PSU → feeds `JA`/`JB` → the panels.
+- The **PB2 sandwich header (`U1`) carries only GND (common reference) + the data lines** (TX/RX/RST per panel).
+- So display current never flows through the Beagle→Gem→carrier stack — the audio rail stays clean.
