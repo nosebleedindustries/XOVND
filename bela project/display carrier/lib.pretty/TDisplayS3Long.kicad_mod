@@ -20,4 +20,9 @@
 		(scale (xyz 1 1 1))
 		(rotate (xyz 0 0 0))
 	)
+	(model "C:/Users/stala/Downloads/display_carrier/lib.pretty/TDisplay_screen.wrl"
+		(offset (xyz 0 0 11.5))
+		(scale (xyz 1 1 1))
+		(rotate (xyz 0 0 0))
+	)
 )
