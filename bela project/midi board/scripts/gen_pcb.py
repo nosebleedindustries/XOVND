@@ -16,28 +16,32 @@ OUT  = os.path.join(HERE, "pb2_midi.kicad_pcb")
 # ---- parts: ref -> (footprint, value, MPN, x, y, rot) ----
 # Compact single-sided jack-board: jacks on the bottom edge (out), ribbon header J3 on top.
 PARTS = {
-    # jacks: Lumberg 1503_03 (same jack as Bela audio), 10.7mm apart, face -Y (panel edge)
+    # panel-edge row (face -Y), all 10.7mm apart & aligned: 2 jacks + power button
     "J1": ("Jack_3.5mm_Lumberg_1503_03_Horizontal","MIDI_IN", "Lumberg1503-03", 14.65, 8.0,  0),
     "J2": ("Jack_3.5mm_Lumberg_1503_03_Horizontal","MIDI_OUT","Lumberg1503-03", 25.35, 8.0,  0),
-    "U2": ("DIP-6_W7.62mm",                    "H11L1M",   "H11L1M",           20.0, 15.0,   0),
-    "J3": ("PinHeader_2x03_P2.54mm_Horizontal","RIBBON",   "2x3-2.54-IDC-RA",  20.0, 34.0,  90),
-    "R1": ("R_0603_1608Metric",                "220",      "RC0603FR-07220RL",  9.0, 13.0,  90),
-    "D1": ("D_SOD-123",                        "1N4148",   "1N4148W-7-F",       9.0, 18.0,  90),
-    "R4": ("R_0603_1608Metric",                "470",      "RC0603FR-07470RL", 31.0, 13.0,  90),
-    "C1": ("C_0603_1608Metric",                "100n",     "CL10B104KB8NNNC",  31.0, 18.0,  90),
-    "R2": ("R_0603_1608Metric",                "220",      "RC0603FR-07220RL", 34.0, 13.0,  90),
-    "R3": ("R_0603_1608Metric",                "220",      "RC0603FR-07220RL", 34.0, 18.0,  90),
-    "C2": ("C_0603_1608Metric",                "100n",     "CL10B104KB8NNNC",  11.0, 24.0,   0),
+    "SW1":("SW_Push_1P1T-MP_NO_Horizontal_Alps_SKRTLAE010","PWR","SKRTLAE010",  36.05, 8.0,  0),
+    "U2": ("DIP-6_W7.62mm",                    "H11L1M",   "H11L1M",           20.0, 23.0,   0),
+    "J3": ("PinHeader_2x03_P2.54mm_Horizontal","RIBBON",   "2x3-2.54-IDC-RA",  16.0, 37.0,  90),
+    "J4": ("PinHeader_1x03_P2.54mm_Horizontal","PWR_HDR",  "1x3-2.54-RA",      41.0, 36.0,  90),
+    "R1": ("R_0603_1608Metric",                "220",      "RC0603FR-07220RL",  9.0, 20.0,  90),
+    "D1": ("D_SOD-123",                        "1N4148",   "1N4148W-7-F",       9.0, 25.0,  90),
+    "R4": ("R_0603_1608Metric",                "470",      "RC0603FR-07470RL", 30.0, 20.0,  90),
+    "C1": ("C_0603_1608Metric",                "100n",     "CL10B104KB8NNNC",  30.0, 25.0,  90),
+    "R2": ("R_0603_1608Metric",                "220",      "RC0603FR-07220RL", 33.0, 20.0,  90),
+    "R3": ("R_0603_1608Metric",                "220",      "RC0603FR-07220RL", 33.0, 25.0,  90),
+    "C2": ("C_0603_1608Metric",                "100n",     "CL10B104KB8NNNC",  13.0, 30.0,   0),
+    "R5": ("R_0603_1608Metric",                "10k",      "RC0603FR-0710KL",  43.0, 22.0,  90),  # PWR pull-up
+    "C3": ("C_0603_1608Metric",                "100n",     "CL10B104KB8NNNC",  43.0, 27.0,  90),  # PWR debounce
     # M2.5 mounting holes for the hex spacers that lift the board to jack height
-    "H1": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                  4.0,  4.5,   0),
-    "H2": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                 36.0,  4.5,   0),
-    "H3": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                  4.0, 34.0,   0),
-    "H4": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                 36.0, 34.0,   0),
+    "H1": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                  4.0,  5.0,   0),
+    "H2": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                 49.0,  5.0,   0),
+    "H3": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                  4.0, 40.0,   0),
+    "H4": ("MountingHole_2.7mm_M2.5",          "M2.5",     "",                 49.0, 40.0,   0),
 }
-# ---- nets: name -> [(ref, pad), ...] ----  (J3 ribbon replaces the PB2 cape pads)
+# ---- nets: name -> [(ref, pad), ...] ----  (J3 ribbon to PB2; J4 = power button to sandwich)
 NETS = {
-    "+3V3":         [("J3","1"),("U2","6"),("R4","1"),("R3","1"),("C1","1"),("C2","1")],
-    "GND":          [("J3","2"),("J3","5"),("U2","5"),("J2","S"),("C1","2"),("C2","2")],
+    "+3V3":         [("J3","1"),("U2","6"),("R4","1"),("R3","1"),("C1","1"),("C2","1"),("R5","2"),("J4","3")],
+    "GND":          [("J3","2"),("J3","5"),("U2","5"),("J2","S"),("C1","2"),("C2","2"),("SW1","2"),("C3","2"),("J4","2")],
     "UART_RX":      [("J3","3"),("U2","4"),("R4","2")],
     "UART_TX":      [("J3","4"),("R2","1")],
     "MIDI_OUT_TIP": [("R2","2"),("J2","T")],
@@ -45,6 +49,7 @@ NETS = {
     "MIDI_IN_RING": [("J1","R"),("R1","1")],
     "MIDI_IN_A":    [("R1","2"),("U2","1"),("D1","1")],
     "MIDI_IN_K":    [("U2","2"),("J1","T"),("D1","2")],
+    "PWR_BTN":      [("SW1","1"),("R5","1"),("C3","1"),("J4","1")],   # active-low soft power to sandwich
 }
 
 # ---- load ALL footprints first (skill §7), then build ----
@@ -80,9 +85,9 @@ miss=[]
 for name, conns in NETS.items():
     n = net(name)
     for ref, pad in conns:
-        p = fps[ref].FindPadByNumber(pad)
-        if p is None: miss.append((ref,pad)); continue
-        p.SetNet(n)
+        ps = [p for p in fps[ref].Pads() if p.GetNumber() == pad]   # all pads w/ that number
+        if not ps: miss.append((ref,pad)); continue
+        for p in ps: p.SetNet(n)
 print("nets:", len(NETS), "| missing pads:", miss)
 
 # design rules (AISLER 2-layer HASL, §12)

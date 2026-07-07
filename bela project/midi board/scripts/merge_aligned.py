@@ -15,6 +15,10 @@ def c_jack(ox, oy, zc):                      # audio-style jack, barrel toward +
     bar = Part.makeCylinder(3.0, 3.4, V(ox + 5.5, oy, zc), V(1, 0, 0))
     bar = bar.cut(Part.makeCylinder(1.75, 3.6, V(ox + 5.4, oy, zc), V(1, 0, 0)))
     return body.fuse(bar)
+def c_button(oy, zc, ox=51.7, panelX=60.6, ztop=13.2):   # power button: body + plunger to panel
+    body = Part.makeBox(6, 5, zc + 1.75 - ztop, V(ox - 3, oy - 2.5, ztop))
+    plg = Part.makeCylinder(1.4, panelX - (ox + 3), V(ox + 3, oy, zc), V(1, 0, 0))
+    return body.fuse(plg)
 def hexspacer(cx, cy, z0, h, af=5.0):
     r = af / math.sqrt(3.0)
     pts = [V(cx + r * math.cos(math.radians(60 * i + 30)),
@@ -41,6 +45,8 @@ try:
     log("MIDI board X %.1f..%.1f Y %.1f..%.1f Z %.1f..%.1f" % (mb.XMin, mb.XMax, mb.YMin, mb.YMax, mb.ZMin, mb.ZMax))
     log("MIDI jacks world  J1(%.1f,%.1f)  J2(%.1f,%.1f)   audio Y 19.1/29.8" % (j1[0], j1[1], j2[0], j2[1]))
     mj1 = c_jack(OX, j1[1], JZ); mj2 = c_jack(OX, j2[1], JZ)
+    swp = xf(36.05, -8); btn = c_button(swp[1], JZ)   # power button, 10.7mm past J2, in the row
+    log("PWR button world Y %.1f (10.7mm from J2 @ %.1f)" % (swp[1], j2[1]))
     spacers = [hexspacer(*xf(hx, hy)[:2], 0.0, LIFT) for hx, hy in [(4, -4.5), (36, -4.5), (4, -34), (36, -34)]]
     j3 = xf(20, -34)
     log("J3 world (%.1f,%.1f,%.1f)" % j3)
@@ -50,11 +56,12 @@ try:
         pts = [V(c.x - 4, c.y, c.z - 0.3), V(c.x + 4, c.y, c.z - 0.3), V(c.x + 4, c.y, c.z + 0.3), V(c.x - 4, c.y, c.z + 0.3)]
         return Part.makePolygon(pts + [pts[0]])
     ribbon = Part.makeLoft([rect(p0), rect(p1)], True)
-    # shared 1mm panel at X=60.6 with 4 jack holes
-    panel = Part.makeBox(1.0, 82.0, 15.0, V(JX - 1.0, 12.0, JZ - 7.5))
+    # shared 1mm panel at X=60.6 with 4 jack holes + 1 button hole
+    panel = Part.makeBox(1.0, 96.0, 15.0, V(JX - 1.0, 12.0, JZ - 7.5))
     for jy in [19.1, 29.8, j1[1], j2[1]]:
         panel = panel.cut(Part.makeCylinder(3.7, 3.0, V(JX - 1.5, jy, JZ), V(1, 0, 0)))
-    comp = Part.makeCompound([sw, mi, mj1, mj2, ribbon, panel] + spacers)
+    panel = panel.cut(Part.makeCylinder(2.0, 3.0, V(JX - 1.5, swp[1], JZ), V(1, 0, 0)))   # button hole (smaller)
+    comp = Part.makeCompound([sw, mi, mj1, mj2, btn, ribbon, panel] + spacers)
     comp.exportStep(OUT); ab = comp.BoundBox
     log("DONE size=%d  env %.1f x %.1f x %.1f" % (os.path.getsize(OUT), ab.XLength, ab.YLength, ab.ZLength))
 except Exception:

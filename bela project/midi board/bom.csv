@@ -1,13 +1,17 @@
 Refs,Qty,Value,Footprint,MPN,Description
 J1 J2,2,3.5mm TRS,Jack_3.5mm_Lumberg_1503_03_Horizontal,Lumberg 1503 03,MIDI IN / MIDI OUT — 3.5mm TRS Type-A jack (same part + 10.7mm spacing as the Bela audio jacks so they align on the panel)
+SW1,1,PWR,SW_Push_1P1T-MP_NO_Horizontal_Alps_SKRTLAE010,Alps SKRTLAE010,Power on/off — side-actuated SMD momentary push button; soft-power to the Beagle. Placed in the panel row 10.7mm from J2 (actuator co-planar with the jack fronts). NOTE: set SW1 rotation so the actuator faces the panel edge (verify vs datasheet).
 U2,1,H11L1M,DIP-6_W7.62mm,H11L1M,High-speed optocoupler — MIDI IN opto-isolation (1=Anode 2=Cathode 3=NC 4=Vo 5=GND 6=Vcc)
 D1,1,1N4148,D_SOD-123,1N4148W-7-F,Reverse-protection diode across the opto input LED
 R1,1,220,R_0603_1608Metric,RC0603FR-07220RL,MIDI IN current-limit resistor
 R4,1,470,R_0603_1608Metric,RC0603FR-07470RL,Opto output pull-up to +3V3
 R2 R3,2,220,R_0603_1608Metric,RC0603FR-07220RL,MIDI OUT tip/ring series resistors (TRS Type-A)
-C1 C2,2,100n,C_0603_1608Metric,CL10B104KB8NNNC,+3V3 decoupling
+R5,1,10k,R_0603_1608Metric,RC0603FR-0710KL,Power-button pull-up to +3V3 (active-low)
+C1 C2 C3,3,100n,C_0603_1608Metric,CL10B104KB8NNNC,+3V3 decoupling (C1/C2) + power-button debounce (C3)
 J3,1,2x3 R/A,PinHeader_2x03_P2.54mm_Horizontal,2x3 2.54mm right-angle header,Ribbon header to PocketBeagle 2 — 1=+3V3 2=GND 3=UART_RX 4=UART_TX 5=GND 6=NC
+J4,1,1x3 R/A,PinHeader_1x03_P2.54mm_Horizontal,1x3 2.54mm right-angle header,Power-button header to the sandwich — 1=PWR_BTN 2=GND 3=+3V3
 H1 H2 H3 H4,4,M2.5,MountingHole_2.7mm_M2.5,-,Mounting holes for the hex standoffs that lift the board to audio-jack height
--,4,hex standoff,M2.5 ~11.6mm,-,"HARDWARE: M2.5 hex spacers — lift the MIDI board so its jacks sit at the Bela audio-jack height (Z≈16.2mm). Use 11mm+washer or 12mm."
+-,4,hex standoff,M2.5 ~11.6mm,-,"HARDWARE: M2.5 hex spacers — lift the MIDI board so its jacks + button sit at the Bela audio-jack height (Z≈16.2mm). Use 11mm+washer or 12mm."
 -,1,ribbon,6-way IDC 2x3,-,"HARDWARE: 6-conductor flat cable, J3 <-> PocketBeagle 2 header P2 (taps P2.23/15/5/7)"
+-,1,cable,3-way,-,"HARDWARE: 3-wire from J4 to the sandwich (PWR_BTN to a Beagle GPIO / power-button input, + GND + 3V3)"
 -,2,IDC socket,2x3 2.54mm,-,HARDWARE: IDC ribbon terminations (one on J3, one on the P2 tap)

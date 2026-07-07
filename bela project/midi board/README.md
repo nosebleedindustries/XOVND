@@ -17,6 +17,14 @@ Companion to the [Bela Gem CAD model](../README.md).
   **10.7 mm** spacing, and mounted on **4× M2.5 hex standoffs** so the MIDI jacks land at
   the same panel plane and height (Z ≈ 16.2 mm) as the audio jacks — everything aligns on
   one enclosure face behind a **1 mm folded/laser-cut cover**.
+- **Power on/off button** (`SW1`, Alps SKRTLAE010 side-actuated SMD): sits **in the same
+  panel row, 10.7 mm** from the last jack, actuator co-planar with the jack fronts (X = 60.6).
+  Soft-power to the Beagle via `J4` (`PWR_BTN`/`GND`/`+3V3`), conditioned on-board with
+  `R5` (10 k pull-up, active-low) + `C3` (100 n debounce).
+  - ⚠ **Set SW1's rotation so the actuator faces the panel edge** (verify vs the SKRTLAE010
+    datasheet — no 3D model ships in KiCad, it's modelled by hand in the assembly). The
+    actuator is a couple mm lower than the jack axis on a bare board; a tall side-switch or a
+    ~1.7 mm riser puts it exactly on the jack centreline if you want the holes perfectly level.
 
 Board: **44 × 40 mm**, single-sided population, 2-layer (AISLER rules).
 
