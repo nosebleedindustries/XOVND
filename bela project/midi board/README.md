@@ -77,6 +77,18 @@ java -jar freerouting-2.2.4.jar -de routing/pb2_midi.dsn -do routing/pb2_midi.se
 kicad python  route_import_ses.py   # import SES + pour GND -> pb2_midi.kicad_pcb
 ```
 
+## Blender renders (process documentation)
+Photoreal Cycles renders of the current build state live in `renders/blender_*.png`
+(hero / detail / top). Pipeline via the **blender-mcp** socket:
+- Boards exported from KiCad as **GLB with copper traces** (`kicad-cli pcb export glb
+  --include-tracks --include-zones --include-silkscreen --include-soldermask`) — the MIDI
+  board and the factory Bela Gem both show real traces + silk + soldermask.
+- PocketBeagle 2 = STEP → OBJ. Case panel, hex spacers, ribbon, TRS jacks and the power
+  button are built as Blender primitives (`blender/bl_build2.py`); 3-point + warm orange
+  rim lighting, AgX view transform.
+- `blender/bl.py` drives Blender over the addon socket (127.0.0.1:9876); `bl_import.py`
+  imports + normalizes, `bl_build2.py` assembles + materials + Cycles, `bl_hero.py` renders.
+
 ## Status
 - **Routed + GND-poured, fab-ready for AISLER.** Jacks + power button aligned to the Bela audio
   jacks (spacing/plane/height), hex-spacer mounts, DRC **0 errors / 0 unconnected**.
