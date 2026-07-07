@@ -76,6 +76,17 @@ nc = ds.m_NetSettings.GetDefaultNetclass()
 nc.SetClearance(FromMM(0.15)); nc.SetTrackWidth(FromMM(0.25))
 nc.SetViaDiameter(FromMM(0.7)); nc.SetViaDrill(FromMM(0.3))
 
+pcbnew.SaveBoard(OUT, b)   # intermediate: all footprints still on F.Cu
+# Screen board is the TOP of the stack -> connectors go on the BACK (B.Cu) so they plug DOWN
+# into the Beagle+Bela sandwich; displays stay on F.Cu (facing up). The big PB2 footprint won't
+# flip on the just-Add'ed in-memory board (SWIG quirk); a reloaded/deserialized board flips fine.
+b = pcbnew.LoadBoard(OUT)
+for ref in ("U1","JA","JB","J_PWR"):
+    f = b.FindFootprintByReference(ref)
+    if f and not f.IsFlipped():   # F.Cu parts -> B.Cu; U1 (PB2) is natively B.Cu already, leave it
+        f.Flip(f.GetPosition(), False)
+fps = {ff.GetReference(): ff for ff in b.GetFootprints()}
+
 xs=[]; ys=[]
 for f in fps.values():
     bx=f.GetBoundingBox(False, False)

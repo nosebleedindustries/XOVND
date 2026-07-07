@@ -4,6 +4,11 @@ A carrier PCB that mounts **two T-Display-S3 Long** AMOLED bars (ESP32-S3, 640×
 **landscape and butted** as one wide ~1280×180 UI strip, and **sandwiches onto the
 Beagle+Bela** via the PocketBeagle-2 header block (`U1`).
 
+**This is the TOP board of the stack**, so **all connectors sit on the BACK (`B.Cu`)** —
+`U1` (PB2 sandwich header), `JA`, `JB` and `J_PWR` face **down** into the Beagle+Bela
+sandwich, while the two displays stay on the **front (`F.Cu`), facing up**. See
+`renders/ensemble_stack_side.png` / `ensemble_stack_front.png` for the assembled stack.
+
 - The panels are **smart satellites** — each ESP32 renders its own graphics, so the
   carrier only carries **power + a PRU-serial link** to each (Bela Gem leaves no HW
   UART/SPI free — see `../docs/display-architecture.md`). PRU0→panel A, PRU1→panel B.
