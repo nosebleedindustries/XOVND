@@ -9,6 +9,13 @@ Beagle+Bela** via the PocketBeagle-2 header block (`U1`).
 sandwich, while the two displays stay on the **front (`F.Cu`), facing up**. See
 `renders/ensemble_stack_side.png` / `ensemble_stack_front.png` for the assembled stack.
 
+**`U1` = MALE 2×18 pin headers** (`PinHeader_2x18_P2.54mm_Vertical` ×2), pins pointing
+**down** so the carrier plugs into female sockets on top of the sandwich — you can't
+mate two female sockets. `JA`/`JB` are male 1×5 headers too (cables to the panels).
+The `ensemble_*` renders show the full stack aligned + sandwiched: `U1` sits over the
+Beagle's P1/P2 headers and its pins insert into the sandwich; the MIDI board is the
+ribbon satellite in front.
+
 - The panels are **smart satellites** — each ESP32 renders its own graphics, so the
   carrier only carries **power + a PRU-serial link** to each (Bela Gem leaves no HW
   UART/SPI free — see `../docs/display-architecture.md`). PRU0→panel A, PRU1→panel B.
