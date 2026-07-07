@@ -25,15 +25,18 @@ ribbon satellite in front.
 
 Board ≈ **184 × 73 mm**, 2-layer, AISLER rules.
 
-## Assembled stack height (fully seated)
-Measured from the factory 3D models with the 2×18 male header (carrier) fully mated into
-a female socket on the sandwich top: **total PCB-stack height ≈ 42.2 mm** (device base → display glass).
+## Assembled stack height (male pins fully seated)
+Measured from the factory 3D models with the carrier's 2×18 male header pushed **fully** into
+the sandwich's female connector: **total PCB-stack height ≈ 36.2 mm** (device base → display glass).
 - PocketBeagle 2 (PCB + headers): 0 → 8.7 mm
-- Bela Gem (mated cape, PCB 11.7–13.3): jacks/connectors up to 21.8 mm
-- Bela→carrier 2×18 male+female (fully seated, ~7 mm): carrier PCB 28.9–30.5 mm
-- T-Display module → glass top: **42.24 mm**
+- Bela Gem (mated cape, PCB 11.7–13.3): **audio jacks up to 21.8 mm ← the limiting component**
+- Carrier PCB: 22.8 → 24.4 mm (1 mm above the Bela jacks; male pins ~6 mm into the female)
+- T-Display module → glass top: **36.19 mm**
 
-Add the 1 mm aluminium enclosure + top/bottom clearances (~3–5 mm) for the external height.
+**The height floor is the Bela's LINE IN/OUT jacks (21.8 mm)** — the carrier can't sit lower
+without hitting them, so the male pins can only insert as far as that clearance allows. Lower-profile
+or relocated jacks would let the stack compress further. Add the 1 mm aluminium enclosure +
+top/bottom clearances (~3–5 mm) for the external height (~40–41 mm).
 
 ## Notes / to refine
 - The `TDisplayS3Long` footprint's **mounting-hole positions are estimates** + the active-
