@@ -62,18 +62,24 @@ for ref,(fp,val,mpn,x,y,rot) in PARTS.items():
     f = loaded[ref]
     f.SetReference(ref); f.SetValue(val)
     f.SetPosition(V2(FromMM(x), FromMM(y))); f.SetOrientationDegrees(rot)
-    b.Add(f)
     try: f.SetField("MPN", mpn)
     except Exception: pass
-    # silk cleanup: hide every non-Reference field, shrink the reference designator
+    # --- modify the footprint BEFORE b.Add(f) (SWIG handle goes stale after Add) ---
     try:
         for fld in f.GetFields():
-            if fld.GetName() != "Reference": fld.SetVisible(False)
-    except Exception:
-        f.Value().SetVisible(False)
-    r = f.Reference()
-    r.SetVisible(True); r.SetTextSize(V2(FromMM(1.0), FromMM(1.0))); r.SetTextThickness(FromMM(0.15))
-    fps[ref] = f
+            try:
+                if fld.GetName() != "Reference": fld.SetVisible(False)
+            except Exception: pass
+    except Exception: pass
+    try: f.Value().SetVisible(False)
+    except Exception: pass
+    try:
+        r = f.Reference()
+        r.SetVisible(True); r.SetTextSize(V2(FromMM(1.0), FromMM(1.0))); r.SetTextThickness(FromMM(0.15))
+    except Exception: pass
+    b.Add(f)
+# rebuild fps from the board — pre-Add Python handles go stale after Add (SWIG)
+fps = {ff.GetReference(): ff for ff in b.GetFootprints()}
 
 # nets
 netmap = {}
@@ -93,8 +99,10 @@ print("nets:", len(NETS), "| missing pads:", miss)
 # design rules (AISLER 2-layer HASL, §12)
 ds = b.GetDesignSettings()
 ds.m_CopperEdgeClearance = FromMM(0.3)
+ds.m_HoleClearance = FromMM(0.1)           # copper-to-hole (Alps SW NPTH sits close to its own pads; NPTH is unplated so 0.1 is fab-safe)
+ds.m_HoleToHoleMin = FromMM(0.25)
 nc = ds.m_NetSettings.GetDefaultNetclass()
-nc.SetClearance(FromMM(0.2)); nc.SetTrackWidth(FromMM(0.25))
+nc.SetClearance(FromMM(0.15)); nc.SetTrackWidth(FromMM(0.25))   # AISLER: space>=0.15, track>=0.2
 nc.SetViaDiameter(FromMM(0.7)); nc.SetViaDrill(FromMM(0.3))
 
 # board outline: bbox of all fps + margin, rect

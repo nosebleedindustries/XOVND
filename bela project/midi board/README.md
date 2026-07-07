@@ -63,8 +63,23 @@ kicad-cli pcb export step --subst-models --no-dnp -o cad/pb2_midi.step cad/pb2_m
 FreeCADCmd scripts/merge_aligned.py                                 # -> aligned assembly STEP
 ```
 
-## Status / TODO
-- Placement done; jacks aligned to Bela audio (spacing/plane/height), hex-spacer mounts added.
-- DRC: clean of shorts/mask; remaining = conservative jack **courtyard** overlap at 10.7 mm
-  (physically fine — Bela mounts the same jack at 10.7 mm) + cosmetic silk. Tighten before fab.
-- Not yet **routed** (Freerouting + GND pour, AISLER) — next step.
+## Routing
+Routed with **Freerouting 2.2.4** (2-layer, both F/B signal) then **GND poured on F.Cu + B.Cu**
+(solid pad connection). AISLER 2-layer rules: track 0.25, space 0.15, via 0.7/0.3, edge 0.3.
+- `scripts/route_export_dsn.py` → `routing/pb2_midi.dsn` (clearance 0.15) → Freerouting `-mp 40`
+  → `routing/pb2_midi.ses` → `scripts/route_import_ses.py` (import + GND pour).
+- **Result: routing_complete = True, 0 unconnected, 2 vias, GND plane both layers.**
+
+```
+kicad python  gen_pcb.py            # clean board
+kicad python  route_export_dsn.py   # -> routing/pb2_midi.dsn
+java -jar freerouting-2.2.4.jar -de routing/pb2_midi.dsn -do routing/pb2_midi.ses -mp 40
+kicad python  route_import_ses.py   # import SES + pour GND -> pb2_midi.kicad_pcb
+```
+
+## Status
+- **Routed + GND-poured, fab-ready for AISLER.** Jacks + power button aligned to the Bela audio
+  jacks (spacing/plane/height), hex-spacer mounts, DRC **0 errors / 0 unconnected**.
+- Conservative KiCad courtyards were shrunk (jacks fit 10.7 mm as on the Bela) and footprint
+  silkscreen graphics dropped. One residual **silk-over-copper warning** (C1 ref over its pad) —
+  cosmetic; AISLER auto-clips silk off pads.
