@@ -23,7 +23,11 @@ ribbon satellite in front.
 - Displays are **mounted mirror-symmetric** (USB-C/electronics outward, screens meeting
   in the middle) for a continuous face. Module = **27.2 × 88.8 × 11.1 mm** (factory STEP).
 
-Board ≈ **184 × 73 mm**, 2-layer, AISLER rules.
+Board ≈ **194 × 81 mm**, 2-layer, AISLER rules, with a 7 mm mounting border carrying
+**4× M2.5 corner holes** (`H1–H4`). The wide board is carried on **4 brass M2.5 hex
+standoffs (~23 mm)** from the enclosure floor to the corners — the central U1 header does
+the wiring, the corner legs do the holding. `scripts/add_mounts.py` grows the border +
+holes on the routed board (routing untouched; the new margin is a bare mounting border).
 
 ## Assembled stack height (male pins fully seated)
 Measured from the factory 3D models with the carrier's 2×18 male header pushed **fully** into

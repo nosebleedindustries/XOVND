@@ -157,15 +157,15 @@
   <div class="runline">
     <div><div class="k">Compute</div><div class="v">PocketBeagle&nbsp;2</div></div>
     <div><div class="k">Audio</div><div class="v">Bela&nbsp;Gem</div></div>
-    <div><div class="k">This issue</div><div class="v">The MIDI carrier</div></div>
-    <div><div class="k">Layers</div><div class="v">2 · AISLER</div></div>
+    <div><div class="k">This issue</div><div class="v">MIDI + screens</div></div>
+    <div><div class="k">Stack</div><div class="v">≈ 36 mm tall</div></div>
   </div>
 </div>
 
 <section class="wrap">
   <div class="col">
     <p class="lede reveal">We are building a synthesizer in the open, one board at a time, and writing it down as we go. Not a datasheet and not a marketing page — a workshop notebook. Every decision here was made against a real constraint, and every picture is a render of geometry that already exists in CAD.</p>
-    <p>The instrument is small, opinionated, and honest about its parts. It runs on Linux, makes sound with sub-millisecond latency, and speaks MIDI over the same 3.5&nbsp;mm jacks the rest of the rig already uses. This first issue introduces the two boards that do the thinking and the listening — then goes deep on the third board we designed ourselves: the one that gives the machine a mouth and ears for MIDI.</p>
+    <p>The instrument is small, opinionated, and honest about its parts. It runs on Linux, makes sound with sub-millisecond latency, and speaks MIDI over the same 3.5&nbsp;mm jacks the rest of the rig already uses. This first issue introduces the two boards that do the thinking and the listening — then goes deep on the two boards we designed ourselves: the small carrier that gives the machine a mouth and ears for MIDI, and the wide carrier of screens that finally gives it a face.</p>
   </div>
 </section>
 
@@ -319,9 +319,115 @@
   </figure>
 </section>
 
+<section class="wrap">
+  <div class="chaptermark">
+    <div class="no">02</div>
+    <div class="ttl">
+      <div class="eyebrow">Chapter two · the board that gives it a face</div>
+      <h2>The&nbsp;dual-screen carrier</h2>
+    </div>
+  </div>
+  <div class="col">
+    <p class="lede">The sandwich can think, listen, and now speak MIDI — but it is faceless. So we drew a fourth board: a wide carrier that mounts <strong>two ultra-long AMOLED bars side by side</strong>, butted into one continuous&nbsp;~1280&nbsp;×&nbsp;180 strip, and plugs down onto the whole stack. It is the instrument's eyes.</p>
+  </div>
+
+  <figure class="reveal">
+    <img src="{{IMG_SCR_STACK}}" alt="Render of the dual-screen carrier held on four brass hex standoffs above the Beagle and Bela sandwich" loading="lazy">
+    <figcaption><b>FIG. 05</b> The screen carrier, seated on the stack — two AMOLED bars up top, the male header pressed into the sandwich, held level on four brass hex legs.</figcaption>
+  </figure>
+
+  <div class="cards" style="margin-top:26px">
+    <div class="card">
+      <div class="role">Display · the eyes</div>
+      <h3>2 × T-Display-S3 Long</h3>
+      <div class="part">LILYGO · ESP32-S3 · 640×180 AMOLED</div>
+      <p>Each bar is a complete little computer — an ESP32-S3 driving its own 640×180 AMOLED. We mount two landscape and butt them at the seam, so the pair reads as a single&nbsp;~1280×180 ribbon of screen spanning the instrument's face.</p>
+      <dl>
+        <dt>Each</dt><dd>640 × 180 · AMOLED</dd>
+        <dt>Brain</dt><dd>ESP32-S3, on-board</dd>
+        <dt>Module</dt><dd>27.2 × 88.8 × 11.1 mm</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <div class="role">Carrier · the mount</div>
+      <h3>The screen board</h3>
+      <div class="part">194 × 81 mm · 2-layer · AISLER</div>
+      <p>The carrier does almost nothing electrically — the panels are smart. It routes <strong>power and a serial link</strong> to each, presents a male header that plugs onto the sandwich, and carries a dedicated 5&nbsp;V input so the hungry displays never load the audio rail.</p>
+      <dl>
+        <dt>Feeds</dt><dd>+5V · GND · serial ×2</dd>
+        <dt>Mounts</dt><dd>4 × M2.5 corner legs</dd>
+        <dt>Sits</dt><dd>Top of the stack</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="col" style="margin-top:56px">
+    <div class="kicker">The decisions</div>
+    <h3 style="margin:10px 0 4px">Six choices, each against a constraint</h3>
+    <p style="color:var(--ink-soft)">A screen this wide, on a stack this small, is a negotiation with physics. Here is how it went.</p>
+  </div>
+  <div class="decisions">
+    <div class="dec"><div class="n">01</div><h3>Two bars, one screen</h3><p>No single panel is this long and thin. Two 640×180 AMOLED bars, butted at the seam, become one&nbsp;~1280×180 strip — a cinematic ribbon for meters, waveforms and menus.</p></div>
+    <div class="dec"><div class="n">02</div><h3>Smart satellites</h3><p>Each panel carries its own ESP32-S3 and renders its own graphics. The carrier only ships them power and a thin serial feed — the Beagle stays free to make sound.</p></div>
+    <div class="dec"><div class="n">03</div><h3>PRU-serial, not SPI</h3><p>With the Bela fitted, every hardware UART and SPI is spoken for. So each panel is driven over a bit-banged serial link on the Beagle's free <span class="mono">PRU</span> pins — one PRU per screen.</p></div>
+    <div class="dec"><div class="n">04</div><h3>A male header, on the back</h3><p>The carrier is the top of the stack, so its connectors face <em>down</em>. The PB2 header is male, pins pointing into the sandwich — you can't mate two sockets, so this side grows the pins.</p></div>
+    <div class="dec"><div class="n">05</div><h3>Its own 5 V rail</h3><p>Two AMOLEDs pull 0.4–1 A. That current gets its own screw terminal straight from the PSU — the PB2 header carries only ground and data, so the audio rail stays clean.</p></div>
+    <div class="dec"><div class="n">06</div><h3>Held on four brass legs</h3><p>A 194&nbsp;mm board can't hang off one connector. Four M2.5 hex standoffs at the corners carry it level above the sandwich; the central header does the wiring, the legs do the holding.</p></div>
+  </div>
+
+  <div class="col" style="margin-top:56px">
+    <div class="kicker">How it connects</div>
+    <h3 style="margin:10px 0 12px">One header down, two cables out</h3>
+    <p>The carrier plugs onto the sandwich through a <strong>male 2×18 header</strong> — the same PocketBeagle footprint, grown as pins that press into the stack. From there, two <span class="mono">1×5</span> headers (<strong>JA</strong>, <strong>JB</strong>) run a short cable to each panel: <span class="mono">+5V · GND · TX · RX · RST</span>. A two-pole screw terminal (<strong>J_PWR</strong>) brings in the dedicated 5&nbsp;V.</p>
+  </div>
+  <figure class="reveal">
+    <img src="{{IMG_SCR_MATE}}" alt="Close render of the carrier's male header pins pushed fully into the sandwich's female connector" loading="lazy">
+    <figcaption><b>FIG. 06</b> Fully seated — the carrier's male pins pressed all the way into the sandwich's female connector, the joint that sets the instrument's height.</figcaption>
+  </figure>
+  <div class="note col">
+    <div class="lbl">Field note · what sets the height</div>
+    <p>Push the male header home and the whole instrument stands <strong>≈ 36&nbsp;mm</strong> tall, base to display glass. The floor isn't the connector — it's the Bela's line in/out jacks at 21.8&nbsp;mm. The carrier can't sit any lower without touching them, so the jacks, not the pins, decide how thin the synth can be.</p>
+  </div>
+
+  <div class="col" style="margin-top:56px">
+    <div class="kicker">The technical part</div>
+    <h3 style="margin:10px 0 6px">Routed, poured, and counted</h3>
+    <p>A sparse board — power and a handful of serial lines — but drawn properly: two copper layers, a parallel Freerouting sweep that kept the loosest clean pass at 0.25&nbsp;mm, ground poured both sides, zero unconnected nets. Below: what it is, and everything you'd order to build one.</p>
+  </div>
+  <figure class="reveal">
+    <img src="{{IMG_SCR_ROUTED}}" alt="Back side of the routed screen carrier showing the male headers, traces and ground pour" loading="lazy">
+    <figcaption><b>FIG. 07</b> The carrier's back — the male sandwich header, panel and power connectors, traces and ground pour. 194 × 81 mm, zero unconnected nets.</figcaption>
+  </figure>
+
+  <div class="spec">
+    <div class="spec-head">
+      <span class="t">Bill of materials · dual-screen carrier</span>
+      <span class="m">rev A · 2-layer · AISLER</span>
+    </div>
+    <div class="tablescroll">
+      <table>
+        <thead><tr><th>Ref</th><th>Qty</th><th>Value</th><th>Part / footprint</th><th>Function</th></tr></thead>
+        <tbody>
+          <tr><td>DS1 · DS2</td><td class="qty">2</td><td class="val">640×180</td><td>LILYGO T-Display-S3 Long</td><td>ESP32-S3 AMOLED bars — butted into one strip</td></tr>
+          <tr><td>U1</td><td class="qty">1</td><td class="val">2×18 M</td><td>PinHeader 2.54 mm (2 rows)</td><td>Male header — plugs down into the sandwich</td></tr>
+          <tr><td>JA · JB</td><td class="qty">2</td><td class="val">1×5</td><td>PinHeader 2.54 mm</td><td>Cable to each panel · +5V·GND·TX·RX·RST</td></tr>
+          <tr><td>J_PWR</td><td class="qty">1</td><td class="val">2-pos</td><td>5.08 mm screw terminal</td><td>Dedicated +5 V from the PSU</td></tr>
+          <tr><td>H1–H4</td><td class="qty">4</td><td class="val">M2.5 · ~23 mm</td><td>brass hex standoff</td><td>Corner legs — carry the board level</td></tr>
+          <tr><td>—</td><td class="qty">8</td><td class="val">M1.6</td><td>screw + short standoff</td><td>Fix each panel to the carrier (4 per panel)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <figure class="reveal" style="margin-top:40px">
+    <img src="{{IMG_SCR_TOP}}" alt="Top-down render of the assembled instrument, the two screens forming one wide strip" loading="lazy">
+    <figcaption><b>FIG. 08</b> Top-down — the two AMOLED bars reading as a single wide face over the stack, the MIDI carrier alongside.</figcaption>
+  </figure>
+</section>
+
 <div class="colophon wrap">
   <div class="big">To be continued.</div>
-  <div class="col" style="color:var(--ink-soft)">Next in the journal: closing the enclosure, the audio front-end, and giving the engine a face. This carrier is routed, poured, and headed for fabrication.</div>
+  <div class="col" style="color:var(--ink-soft)">Next in the journal: folding the 1&nbsp;mm aluminium enclosure around a 36&nbsp;mm stack, the power supply, and first light on the screens. Both carriers are routed, poured, and headed for fabrication.</div>
   <div class="row">
     <span>XOVND · Build Journal № 01</span>
     <span>github.com/nosebleedindustries</span>
