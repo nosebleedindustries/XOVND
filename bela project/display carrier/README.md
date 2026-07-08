@@ -16,7 +16,10 @@ the sandwich (asymmetric). `JB` moved to x≈110 to clear the shifted U1.
 
 **`U1` = MALE 2×18 pin headers** (`PinHeader_2x18_P2.54mm_Vertical` ×2), pins pointing
 **down** so the carrier plugs into female sockets on top of the sandwich — you can't
-mate two female sockets. `JA`/`JB` are male 1×5 headers too (cables to the panels).
+mate two female sockets. `JA`/`JB` are now **FEMALE 1×5 sockets on the FRONT (`F.Cu`, display side)** — each display
+plugs straight into its socket for **power + data** (`+5V·GND·TX·RX·RST`), no cable. They sit in
+the gap just below each display; `JB` is offset left to clear the edge-shifted `U1`. Socket
+position should be matched to the LILYGO module's actual breakout header.
 The `ensemble_*` renders show the full stack aligned + sandwiched: `U1` sits over the
 Beagle's P1/P2 headers and its pins insert into the sandwich; the MIDI board is the
 ribbon satellite in front.

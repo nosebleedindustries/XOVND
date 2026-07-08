@@ -18,8 +18,8 @@ PARTS = {
     "DS1": ("TDisplayS3Long",  "T-Display-S3-Long", "",            55.0,  25.0,  90),
     "DS2": ("TDisplayS3Long",  "T-Display-S3-Long", "",           143.8,  25.0, 270),
     "U1":  ("PB2",             "PocketBeagle2",     "PB2 stack",  165.0,  62.0,   0),  # sandwich at the RIGHT edge -> Bela audio jacks reach a free edge
-    "JA":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_A", "1x5",    55.0,  47.0,   0),  # cable to panel A
-    "JB":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_B", "1x5",   110.0,  47.0,   0),  # cable to panel B (moved left, clear of the shifted U1)
+    "JA":  ("PinSocket_1x05_P2.54mm_Vertical", "DISP_A", "1x5-F",   55.0,  43.0,   0),  # FEMALE socket on F.Cu (gap below DS1) -> panel A plugs in (pwr+data)
+    "JB":  ("PinSocket_1x05_P2.54mm_Vertical", "DISP_B", "1x5-F",  120.0,  43.0,   0),  # FEMALE socket on F.Cu (gap below DS2, LEFT of U1) -> panel B plugs in (pwr+data)
     "J_PWR":("TerminalBlock_bornier-2_P5.08mm","PWR_IN","+5V/GND", 16.0,  64.0,   0),  # dedicated 5V from the main PSU
     "J_MIDI":("PinHeader_2x03_P2.54mm_Vertical","MIDI_HUB","2x3-IDC", 60.0, 79.0, 0),  # MIDI-board ribbon plugs in here; distributed down via U1
 }
@@ -87,7 +87,7 @@ pcbnew.SaveBoard(OUT, b)   # intermediate: all footprints still on F.Cu
 # into the Beagle+Bela sandwich; displays stay on F.Cu (facing up). The big PB2 footprint won't
 # flip on the just-Add'ed in-memory board (SWIG quirk); a reloaded/deserialized board flips fine.
 b = pcbnew.LoadBoard(OUT)
-for ref in ("U1","JA","JB","J_PWR","J_MIDI"):
+for ref in ("U1","J_PWR","J_MIDI"):   # JA/JB stay on F.Cu (display side) so the panels plug into them
     f = b.FindFootprintByReference(ref)
     if f and not f.IsFlipped():   # F.Cu parts -> B.Cu; U1 (PB2) is natively B.Cu already, leave it
         f.Flip(f.GetPosition(), False)
