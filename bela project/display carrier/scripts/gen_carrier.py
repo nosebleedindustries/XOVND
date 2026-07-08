@@ -21,18 +21,24 @@ PARTS = {
     "JA":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_A", "1x5",    55.0,  47.0,   0),  # cable to panel A
     "JB":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_B", "1x5",   143.8,  47.0,   0),  # cable to panel B
     "J_PWR":("TerminalBlock_bornier-2_P5.08mm","PWR_IN","+5V/GND", 16.0,  64.0,   0),  # dedicated 5V from the main PSU
+    "J_MIDI":("PinHeader_2x03_P2.54mm_Vertical","MIDI_HUB","2x3-IDC", 60.0, 79.0, 0),  # MIDI-board ribbon plugs in here; distributed down via U1
 }
 # JA/JB pin order: 1=+5V 2=GND 3=TX 4=RX 5=RST  ·  J_PWR: 1=+5V 2=GND
 # Displays powered from J_PWR (NOT the Beagle rail); PB2 sandwich carries only GND + data.
 NETS = {
     "+5V":    [("J_PWR","1"),("JA","1"),("JB","1")],
-    "GND":    [("J_PWR","2"),("U1","P1.16"),("U1","P2.15"),("JA","2"),("JB","2")],   # common GND: PSU + Beagle + panels
+    "GND":    [("J_PWR","2"),("U1","P1.16"),("U1","P2.15"),("JA","2"),("JB","2"),("J_MIDI","2"),("J_MIDI","5")],  # common GND: PSU + Beagle + panels + MIDI
     "DA_TX":  [("U1","P1.29"),("JA","3")],   # PRU0.7 -> panel A
     "DA_RX":  [("U1","P1.31"),("JA","4")],   # PRU0.4 <- panel A
     "DA_RST": [("U1","P1.4"),("JA","5")],    # GPIO89
     "DB_TX":  [("U1","P2.28"),("JB","3")],   # PRU1.15 -> panel B
     "DB_RX":  [("U1","P2.30"),("JB","4")],   # PRU1.12 <- panel B
     "DB_RST": [("U1","P2.33"),("JB","5")],   # GPIO52
+    # --- MIDI-board ribbon, distributed DOWN to the Beagle via U1. UART4 (P2.5/7) is taken by the
+    #     Bela's audio, so MIDI RX/TX land on free Beagle pins (soft-serial, like the displays). ---
+    "+3V3":     [("J_MIDI","1"),("U1","P2.23")],   # Beagle 3.3V rail -> MIDI board
+    "MIDI_RX":  [("J_MIDI","3"),("U1","P2.32")],   # MIDI IN  -> free Beagle pin
+    "MIDI_TX":  [("J_MIDI","4"),("U1","P2.34")],   # MIDI OUT <- free Beagle pin
 }
 
 loaded = {ref: pcbnew.FootprintLoad(LIB, fp) for ref,(fp,*_ ) in PARTS.items()}
@@ -81,7 +87,7 @@ pcbnew.SaveBoard(OUT, b)   # intermediate: all footprints still on F.Cu
 # into the Beagle+Bela sandwich; displays stay on F.Cu (facing up). The big PB2 footprint won't
 # flip on the just-Add'ed in-memory board (SWIG quirk); a reloaded/deserialized board flips fine.
 b = pcbnew.LoadBoard(OUT)
-for ref in ("U1","JA","JB","J_PWR"):
+for ref in ("U1","JA","JB","J_PWR","J_MIDI"):
     f = b.FindFootprintByReference(ref)
     if f and not f.IsFlipped():   # F.Cu parts -> B.Cu; U1 (PB2) is natively B.Cu already, leave it
         f.Flip(f.GetPosition(), False)

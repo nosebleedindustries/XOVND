@@ -9,7 +9,9 @@ L("G_BELA",  (-103.3,117.1,11.7))     # audio cape on top of PB2 (mated: Z 10..2
 # carrier on top: male U1 at GLB-local (100,-62); put it over the beagle centre (28,17.5)
 # -> Gx=28-100=-72, Gy=17.5+62=79.5 ; Z so U1 male pins (down to local -8.6) insert into the sandwich top (~21.8)
 L("G_CARRIER",(-72.0,79.5,22.85))  # dropped: male pins fully inserted; PCB clears Bela jacks (21.8) by 1mm
-L("G_MIDI",  (-12,-24,2.0))           # ribbon satellite, moved to the FRONT at table level (clear of the wide carrier)
+L("G_MIDI",  (40.75,-70.5,2.0))       # ribbon satellite at the FRONT; flipped 180deg (below) so its TRS jacks face OUT
+_m=bpy.data.objects.get("G_MIDI")
+if _m: _m.rotation_euler=(0,0,3.141592653589793)   # jacks -> front panel (-Y), ribbon J3 -> toward the carrier
 bpy.context.view_layer.update()
 # PB2 material (colourless OBJ)
 def mat(n,rgba,r=0.5,m=0.0):
