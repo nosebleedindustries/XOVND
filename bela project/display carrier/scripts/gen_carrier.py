@@ -17,9 +17,9 @@ OUT  = os.path.join(HERE, "display_carrier.kicad_pcb")
 PARTS = {
     "DS1": ("TDisplayS3Long",  "T-Display-S3-Long", "",            55.0,  25.0,  90),
     "DS2": ("TDisplayS3Long",  "T-Display-S3-Long", "",           143.8,  25.0, 270),
-    "U1":  ("PB2",             "PocketBeagle2",     "PB2 stack",  100.0,  62.0,   0),  # sandwich to Beagle+Bela
+    "U1":  ("PB2",             "PocketBeagle2",     "PB2 stack",  165.0,  62.0,   0),  # sandwich at the RIGHT edge -> Bela audio jacks reach a free edge
     "JA":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_A", "1x5",    55.0,  47.0,   0),  # cable to panel A
-    "JB":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_B", "1x5",   143.8,  47.0,   0),  # cable to panel B
+    "JB":  ("PinHeader_1x05_P2.54mm_Vertical", "DISP_B", "1x5",   110.0,  47.0,   0),  # cable to panel B (moved left, clear of the shifted U1)
     "J_PWR":("TerminalBlock_bornier-2_P5.08mm","PWR_IN","+5V/GND", 16.0,  64.0,   0),  # dedicated 5V from the main PSU
     "J_MIDI":("PinHeader_2x03_P2.54mm_Vertical","MIDI_HUB","2x3-IDC", 60.0, 79.0, 0),  # MIDI-board ribbon plugs in here; distributed down via U1
 }

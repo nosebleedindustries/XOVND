@@ -3,7 +3,7 @@ from mathutils import Vector
 # 6-way IDC ribbon: MIDI board J3 -> carrier J_MIDI (underside). Endpoints in world mm:
 #  J3   KiCad(16,38) -> GLB(16,-38) + G_MIDI(-12,-24)  = (4,-62), on top of the MIDI board (~z8.5)
 #  JMID KiCad(60,79) -> GLB(60,-79) + G_CARRIER(-72,79.5)= (-12,0.5), carrier B.Cu underside (~z16)
-A=Vector((24.75,-32.5,8.6)); B=Vector((-12.0,0.5,16.0))   # J3 after the 180deg MIDI flip -> J_MIDI (carrier underside)
+A=Vector((-77.0,-20.0,8.6)); B=Vector((-77.0,0.5,16.0))   # J3 (relocated MIDI) -> J_MIDI (relocated on the carrier underside)
 for n in ("RIBBON",):
     o=bpy.data.objects.get(n)
     if o: bpy.data.objects.remove(o,do_unlink=True)

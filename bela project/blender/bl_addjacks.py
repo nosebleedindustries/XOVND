@@ -19,9 +19,9 @@ def jack(name, body_c, barrel_c, axis):
     c=bpy.context.active_object; c.name=name+"_barrel"
     c.rotation_euler=(math.radians(90),0,0) if axis=='Y' else (0,math.radians(90),0)
     c.data.materials.clear(); c.data.materials.append(mtl)
-# MIDI board TRS jacks -> front (-Y)
-for i,jx in enumerate([26.1,15.4]):
-    jack("MJACK_%d"%i, (jx,-60.0,5.0), (jx,-66.5,5.0), 'Y')
+# MIDI board TRS jacks -> front (-Y), at the relocated MIDI board (front-left)
+for i,jx in enumerate([-75.65,-86.35]):
+    jack("MJACK_%d"%i, (jx,-48.0,5.0), (jx,-54.5,5.0), 'Y')
 # Bela audio jacks J7/J8 (LINE IN/OUT) -> right edge (+X); model not installed either
 for i,jy in enumerate([23.0,12.3]):
     jack("MJACK_bela_%d"%i, (52.0,jy,16.0), (58.5,jy,16.0), 'X')

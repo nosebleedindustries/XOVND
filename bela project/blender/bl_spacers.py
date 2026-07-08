@@ -11,7 +11,7 @@ steel=mat("steel",(0.62,0.63,0.66,1),0.28,1.0)
 # carrier corner holes: KiCad (3.7,6.1),(192.8,6.1),(3.7,81.9),(192.8,81.9);
 # GLB Y=-KiCadY; G_CARRIER at (-72,79.5) -> world = (kx-72, -ky+79.5)
 corners=[(3.7,6.1),(192.8,6.1),(3.7,81.9),(192.8,81.9)]
-world=[(kx-72.0, -ky+79.5) for (kx,ky) in corners]
+world=[(kx-137.0, -ky+79.5) for (kx,ky) in corners]
 AF=5.0; R=AF/(2*math.cos(math.radians(30)))   # M2.5 hex, 5mm across flats
 Zbot=0.0; Ztop=22.8; H=Ztop-Zbot
 CTOP=24.4   # carrier PCB top (bottom 22.8 + 1.6)

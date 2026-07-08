@@ -9,6 +9,11 @@ Beagle+Bela** via the PocketBeagle-2 header block (`U1`).
 sandwich, while the two displays stay on the **front (`F.Cu`), facing up**. See
 `renders/ensemble_stack_side.png` / `ensemble_stack_front.png` for the assembled stack.
 
+**`U1` is at the carrier's RIGHT edge** (KiCad x≈165, below DS2): the Beagle+Bela sandwich
+sits at that edge so the **Bela's audio jacks clear the carrier and reach a free panel edge**
+(they'd be buried mid-board with U1 centred). Trade-off: the two displays sit to the left of
+the sandwich (asymmetric). `JB` moved to x≈110 to clear the shifted U1.
+
 **`U1` = MALE 2×18 pin headers** (`PinHeader_2x18_P2.54mm_Vertical` ×2), pins pointing
 **down** so the carrier plugs into female sockets on top of the sandwich — you can't
 mate two female sockets. `JA`/`JB` are male 1×5 headers too (cables to the panels).
