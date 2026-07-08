@@ -17,12 +17,38 @@ OUT  = os.path.join(HERE, "display_carrier.kicad_pcb")
 PARTS = {
     "DS1": ("TDisplayS3Long",  "T-Display-S3-Long", "",            55.0,  25.0,  90),
     "DS2": ("TDisplayS3Long",  "T-Display-S3-Long", "",           143.8,  25.0, 270),
-    "U1":  ("PB2",             "PocketBeagle2",     "PB2 stack",  165.0,  62.0,   0),  # sandwich at the RIGHT edge -> Bela audio jacks reach a free edge
+    "U1":  ("PB2",             "PocketBeagle2",     "PB2 stack",  165.0, -26.0,   0),  # BOTTOM SKIRT (below the lower encoder row) — clean faceplate front; sandwich hangs off the bottom edge
     "JA":  ("PinSocket_2x15_P1.27mm_Vertical", "DISP_A", "P5-2x15",  61.0, 30.7,  90),  # socket pad-centre = the ACTUAL H685 P5 body (verified in STEP at 69.9,31.3)
     "JB":  ("PinSocket_2x15_P1.27mm_Vertical", "DISP_B", "P5-2x15", 137.8, 19.3, 270),  # socket pad-centre = the ACTUAL H685 P5 body (verified in STEP at 128.9,18.7)
-    "J_PWR":("TerminalBlock_bornier-2_P5.08mm","PWR_IN","+5V/GND", 16.0,  64.0,   0),  # dedicated 5V from the main PSU
-    "J_MIDI":("PinHeader_2x03_P2.54mm_Vertical","MIDI_HUB","2x3-IDC", 60.0, 79.0, 0),  # MIDI-board ribbon plugs in here; distributed down via U1
+    "J_PWR":("TerminalBlock_bornier-2_P5.08mm","PWR_IN","+5V/GND", 16.0, -26.0,   0),  # bottom skirt (left)
+    "J_MIDI":("PinHeader_2x03_P2.54mm_Vertical","MIDI_HUB","2x3-IDC", 60.0, -26.0, 0),  # bottom skirt (centre) — MIDI ribbon plugs in here
+    # --- RP2040 encoder-reader subsystem, on B.Cu (back), grouped in the skirt between J_MIDI and U1.
+    #     MECHANICAL PLACEMENT ONLY (footprints correct; wiring goes in a proper schematic next). ---
+    "U2":  ("RP2040_QFN56",       "RP2040",   "RP2040",         100.0, -17.0,  0),   # the MCU (reads 12 enc A/B + I2C to Beagle)
+    "U3":  ("Flash_SOIC8",        "W25Q128",  "W25Q128JVSIQ",    87.0, -15.0,  0),   # QSPI boot flash
+    "Y1":  ("XTAL_3225",          "12MHz",    "ABM8-272",       112.0, -13.0,  0),   # 12 MHz crystal (USB clock)
+    "U4":  ("LDO_SOT235",         "3V3",      "AP2112K-3.3",    121.0, -14.0,  0),   # 5V -> 3.3V rail
+    "U5":  ("SR_74HC165_SOIC16",  "74HC165",  "74HC165",         82.0, -33.0, 90),   # switch shift-reg 1 (enc SW 1-8)
+    "U6":  ("SR_74HC165_SOIC16",  "74HC165",  "74HC165",        108.0, -33.0, 90),   # switch shift-reg 2 (enc SW 9-12 + spare)
+    "J_USB":("USBC",              "USB",      "USB-C",           95.0, -47.5,  0),   # flashing (UF2) / optional power
 }
+# --- 12 endless (no-detent) rotary encoders (Bourns PEC12R-4020F class), on F.Cu (knobs up,
+#     same face as the displays): 6 ABOVE + 6 BELOW the display strip. Parameterised to match the
+#     hand-placed reference: each screen is treated on its own, the 3 encoders' SHAFTS centred on the
+#     display and spaced by one icon = active_width / 3. Active width from the LILYGO DWG (82.56 mm),
+#     taken CENTRED on the module (matches the reference placement + physical module symmetry).
+#     KEY: gen places the footprint ORIGIN (pad A), but the visible shaft/bushing is at (7.5, 2.5) from
+#     it — so we put the SHAFT on the icon centre and back-solve the origin (origin = shaft - offset). ---
+_AW  = 82.56                                           # active-area long dimension (LILYGO DWG)
+_SP  = _AW / 3.0                                        # 27.52 mm — one icon / partition width
+_SHX, _SHY = 7.5, 2.5                                  # bushing/shaft offset from the footprint origin (rot 0)
+def _cols3(center):                                    # 3 SHAFT x's centred on the display, one per icon (thirds)
+    return [round(center + k * _SP, 3) for k in (-1, 0, 1)]
+_shaft_x = _cols3(PARTS["DS1"][3]) + _cols3(PARTS["DS2"][3])   # centre on each module centre (55.0 / 143.8)
+_Y_TOP_SH, _Y_BOT_SH = 48.5, 1.5                       # shaft rows, symmetric about the display centre (Y = 25)
+for _i, _sx in enumerate(_shaft_x, 1):                 # origin = shaft - bushing offset (rot 0)
+    PARTS["ET%d" % _i] = ("RotaryEncoder_PEC12R_Vertical", "ENC", "PEC12R-4020F-S0024", round(_sx - _SHX, 3), round(_Y_TOP_SH - _SHY, 3), 0)  # top row
+    PARTS["EB%d" % _i] = ("RotaryEncoder_PEC12R_Vertical", "ENC", "PEC12R-4020F-S0024", round(_sx - _SHX, 3), round(_Y_BOT_SH - _SHY, 3), 0)  # bottom row
 # JA/JB pin order: 1=+5V 2=GND 3=TX 4=RX 5=RST  ·  J_PWR: 1=+5V 2=GND
 # Displays powered from J_PWR (NOT the Beagle rail); PB2 sandwich carries only GND + data.
 NETS = {
@@ -87,7 +113,7 @@ pcbnew.SaveBoard(OUT, b)   # intermediate: all footprints still on F.Cu
 # into the Beagle+Bela sandwich; displays stay on F.Cu (facing up). The big PB2 footprint won't
 # flip on the just-Add'ed in-memory board (SWIG quirk); a reloaded/deserialized board flips fine.
 b = pcbnew.LoadBoard(OUT)
-for ref in ("U1","J_PWR","J_MIDI"):   # JA/JB stay on F.Cu (display side) so the panels plug into them
+for ref in ("U1","J_PWR","J_MIDI","U2","U3","Y1","U4","U5","U6","J_USB"):   # connectors + RP2040 subsystem -> B.Cu (back); JA/JB + encoders stay on F.Cu (faceplate)
     f = b.FindFootprintByReference(ref)
     if f and not f.IsFlipped():   # F.Cu parts -> B.Cu; U1 (PB2) is natively B.Cu already, leave it
         f.Flip(f.GetPosition(), False)

@@ -328,8 +328,13 @@
     </div>
   </div>
   <div class="col">
-    <p class="lede">The sandwich can think, listen, and now speak MIDI — but it is faceless. So we drew a fourth board: a wide carrier that mounts <strong>two ultra-long AMOLED bars side by side</strong>, butted into one continuous&nbsp;~1280&nbsp;×&nbsp;180 strip, and plugs down onto the whole stack. It is the instrument's eyes.</p>
+    <p class="lede">The sandwich can think, listen, and now speak MIDI — but it is faceless. So we drew a fourth board: a wide carrier that mounts <strong>two ultra-long bar screens side by side</strong>, butted into one continuous&nbsp;~1280&nbsp;×&nbsp;180 strip, and plugs down onto the whole stack. It is the instrument's eyes.</p>
   </div>
+
+  <figure class="reveal">
+    <img src="{{IMG_DISPLAY_PHOTO}}" alt="Official LILYGO product photo of the T-Display-S3 Long: the ultra-wide 640x180 bar screen lit up showing large flip-clock digits, with the ESP32-S3 PCB back shown below" loading="lazy">
+    <figcaption><b>FIG. 04b</b> What a real unit looks like — the LILYGO&nbsp;<b>T-Display-S3&nbsp;Long</b>: a 3.42″ 640×180 bar panel (AXS15231 <b>TFT</b>, not AMOLED as first assumed) driven by an on-board ESP32-S3. Two of these, butted at the seam, become the instrument's face. <span class="mono">photo: lilygo.cc</span></figcaption>
+  </figure>
 
   <figure class="reveal">
     <img src="{{IMG_SCR_STACK}}" alt="Render of the dual-screen carrier held on four brass hex standoffs above the Beagle and Bela sandwich" loading="lazy">
@@ -423,13 +428,73 @@
 
   <figure class="reveal" style="margin-top:40px">
     <img src="{{IMG_SCR_TOP}}" alt="Top-down render of the assembled instrument, the two screens forming one wide strip" loading="lazy">
-    <figcaption><b>FIG. 08</b> Top-down — the two AMOLED bars reading as a single wide face over the stack, the MIDI carrier alongside.</figcaption>
+    <figcaption><b>FIG. 08</b> Top-down — the two bar screens reading as a single wide face over the stack, the MIDI carrier alongside.</figcaption>
   </figure>
+</section>
+
+<section class="wrap">
+  <div class="chaptermark">
+    <div class="no">03</div>
+    <div class="ttl">
+      <div class="eyebrow">Chapter three · the board that gives it hands</div>
+      <h2>The&nbsp;faceplate — twelve knobs and a brain</h2>
+    </div>
+  </div>
+  <div class="col">
+    <p class="lede">Two screens make an instrument you can read. To make one you can <em>play</em>, the carrier grows a control surface: <strong>twelve endless encoders</strong>, six above the strip and six below, each knob sitting over one of three on-screen slots per panel — the Elektron / Ableton&nbsp;Push way of tying a knob to whatever the display puts under it.</p>
+  </div>
+
+  <figure class="reveal">
+    <img src="{{IMG_IFACE}}" alt="Blender render of the display carrier faceplate: two black bar screens with six rotary encoders above and six below, aligned to the screen thirds" loading="lazy">
+    <figcaption><b>FIG. 09</b> The faceplate — twelve <b>Bourns PEC12R</b> endless (no-detent) encoders framing the twin bar screens, each shaft centred on its third of a panel.</figcaption>
+  </figure>
+
+  <div class="cards" style="margin-top:26px">
+    <div class="card">
+      <div class="role">The knob</div>
+      <h3>12 × endless encoder</h3>
+      <div class="part">Bourns PEC12R-4020F-S0024</div>
+      <p>Smooth, detent-less, continuous rotation with a push switch — the feel of a Digitakt data knob or a Push macro. Through-hole with a threaded panel bushing, so the faceplate holds them mechanically; EU-stocked and hand-soldered (AISLER's pick-and-place is SMD-only, so these THT panel parts go on by hand).</p>
+      <dl>
+        <dt>Feel</dt><dd>0 detents · 24 PPR · push</dd>
+        <dt>Layout</dt><dd>3 per screen, on the thirds</dd>
+        <dt>Mount</dt><dd>THT · M7 bushing · Ø6 D-shaft</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <div class="role">Why it needs a brain</div>
+      <h3>Why an RP2040</h3>
+      <div class="part">the Bela can't read 36 lines</div>
+      <p>Twelve quadrature encoders are 24 A/B lines; twelve push switches add 12 more — <strong>36 I/O</strong>. The Bela's PocketBeagle has almost no pins left (the screens eat its PRUs, MIDI takes a soft-UART), and decoding twelve quadratures in Linux would steal cycles from the audio thread. So the knobs get their own microcontroller.</p>
+      <dl>
+        <dt>Reads</dt><dd>12 enc · 12 switches</dd>
+        <dt>Reports</dt><dd>I²C · 2 wires to the Beagle</dd>
+        <dt>Budget</dt><dd>29 / 30 GPIO used</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="col" style="margin-top:40px">
+    <div class="kicker">The why, in full</div>
+    <h3 style="margin:10px 0 12px">A smart satellite for the knobs</h3>
+    <p>It is the same trick as the screens. Each panel is already a smart ESP32 satellite that draws its own pixels, so the carrier ships it power and a thin serial feed and the Beagle stays free to make sound. The knobs follow suit: an <strong>RP2040</strong> on the back of the carrier does one job — read every encoder and button, and hand the Beagle a tidy summary over <span class="mono">I²C</span>, on two wires.</p>
+    <p>The RP2040 is unusually well suited to it. Its <strong>PIO</strong> blocks decode quadrature <em>in hardware</em> — a state machine per encoder, zero CPU spent counting edges — and it has exactly enough pins: <strong>24&nbsp;GPIO</strong> for the twelve A/B pairs, two for the I²C link, and three to clock a pair of <span class="mono">74HC165</span> shift registers that scan the twelve push switches. That is 29 of its 30 GPIO, one to spare. It flashes over USB-C by drag-and-drop (UF2), boots from a small QSPI flash, and runs off a local 3.3&nbsp;V rail — so the whole knob subsystem tucks onto the carrier's back skirt beside the sandwich header and never touches the audio board.</p>
+  </div>
+
+  <figure class="reveal">
+    <img src="{{IMG_IFACE_TOP}}" alt="Top-down Blender render of the faceplate showing the twelve encoders evenly framing the two bar screens" loading="lazy">
+    <figcaption><b>FIG. 10</b> Top-down — twelve knobs, two screens, and the maths made visible: every shaft lands on the centre of its on-screen slot. The reader board (RP2040 + shift registers) hides on the back skirt.</figcaption>
+  </figure>
+
+  <div class="note col">
+    <div class="lbl">Field note · one board, three brains and a spine</div>
+    <p>The instrument now carries three kinds of silicon working together: two ESP32s (one per screen, drawing pixels), an RP2040 (reading knobs), and — through the sandwich header — the PocketBeagle that ties them together and makes the sound. Power, I²C and a couple of serial links are all that cross between them. <b>Next in the journal:</b> wiring the RP2040's datasheet-verified pin-map into copper, and routing the faceplate.</p>
+  </div>
 </section>
 
 <div class="colophon wrap">
   <div class="big">To be continued.</div>
-  <div class="col" style="color:var(--ink-soft)">Next in the journal: folding the 1&nbsp;mm aluminium enclosure around a 36&nbsp;mm stack, the power supply, and first light on the screens. Both carriers are routed, poured, and headed for fabrication.</div>
+  <div class="col" style="color:var(--ink-soft)">Next in the journal: routing the faceplate from its verified pin-map, then folding the 1&nbsp;mm aluminium enclosure around the stack, the power supply, and first light on the screens. The MIDI carrier is routed and poured; the display carrier is placed — twelve knobs, two screens and an RP2040 — and headed for copper.</div>
   <div class="row">
     <span>XOVND · Build Journal № 01</span>
     <span>github.com/nosebleedindustries</span>

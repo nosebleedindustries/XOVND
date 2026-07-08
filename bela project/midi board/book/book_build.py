@@ -24,6 +24,9 @@ imgs={
  "{{IMG_SCR_MATE}}":  jpg(D+r"\_scr_mate.png",1500,85),
  "{{IMG_SCR_TOP}}":   jpg(D+r"\_scr_top.png",1500,85),
  "{{IMG_SCR_ROUTED}}":jpg(D+r"\_scr_routed.png",1500,86),
+ "{{IMG_DISPLAY_PHOTO}}": jpg(D+r"\_display_photo.jpg",1100,88),
+ "{{IMG_IFACE}}":     jpg(r"C:\Users\stala\Downloads\display_carrier\_bl_iface.png",1600,85),
+ "{{IMG_IFACE_TOP}}": jpg(r"C:\Users\stala\Downloads\display_carrier\_bl_top.png",1600,85),
 }
 t=open(D+r"\book\book_template.html",encoding="utf-8").read()
 for k,v in imgs.items(): t=t.replace(k,v)
