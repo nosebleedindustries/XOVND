@@ -19,7 +19,8 @@ def jack(cx,cy,cz,axis):
     else:
         bd=Part.makeBox(6,7.5,7,V(cx-3,cy-3.75,cz-3.5)); br=Part.makeCylinder(3,9,V(cx-2,cy,cz),V(1,0,0))
     return bd.fuse(br)
-for (cx,cy) in [(26.1,-60.0),(15.4,-60.0)]: shapes.append(jack(cx,cy,5.0,'Y'))   # MIDI, front
+# MIDI jacks now come from the real model baked into pb2_midi.step; only the Bela audio jacks
+# still need approximations (its ${BELA_3DMODEL_DIR} is unset -> Lumberg model missing)
 for (cx,cy) in [(52.0,23.0),(52.0,12.3)]:   shapes.append(jack(cx,cy,16.0,'X'))  # Bela audio, right edge
 def hexp(cx,cy,z0,z1,af=5.0):
     R=af/(2*math.cos(math.radians(30)))

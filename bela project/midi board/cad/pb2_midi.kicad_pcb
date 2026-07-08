@@ -1587,7 +1587,7 @@
 			(uuid "eed47d1f-94f1-4959-929d-7ff163c38d0d")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector_Audio.3dshapes/Jack_3.5mm_Lumberg_1503_03_Horizontal.step"
+		(model "C:/Users/stala/Downloads/pb2_midi/models/Jack_3.5mm_Lumberg_1503_03_Horizontal.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -4628,7 +4628,7 @@
 			(uuid "19b35e3f-312a-4593-bedd-7d9c9dd808af")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector_Audio.3dshapes/Jack_3.5mm_Lumberg_1503_03_Horizontal.step"
+		(model "C:/Users/stala/Downloads/pb2_midi/models/Jack_3.5mm_Lumberg_1503_03_Horizontal.step"
 			(offset
 				(xyz 0 0 0)
 			)

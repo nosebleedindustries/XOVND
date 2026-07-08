@@ -379,6 +379,7 @@
     <div class="kicker">How it connects</div>
     <h3 style="margin:10px 0 12px">One header down, two cables out</h3>
     <p>The carrier plugs onto the sandwich through a <strong>male 2×18 header</strong> — the same PocketBeagle footprint, grown as pins that press into the stack. From there, two <span class="mono">1×5</span> headers (<strong>JA</strong>, <strong>JB</strong>) run a short cable to each panel: <span class="mono">+5V · GND · TX · RX · RST</span>. A two-pole screw terminal (<strong>J_PWR</strong>) brings in the dedicated 5&nbsp;V.</p>
+    <p>The carrier is also the MIDI board's home. Rather than reach the Beagle's <span class="mono">P2</span> header — buried under the Bela — the MIDI board's 6-way ribbon plugs into <strong>J_MIDI</strong> on the carrier's underside, and the carrier passes the signal down through the same U1 header on spare Beagle pins. (UART4 belongs to the audio, so MIDI rides a soft-serial link, like the screens.) One board, every connection.</p>
   </div>
   <figure class="reveal">
     <img src="{{IMG_SCR_MATE}}" alt="Close render of the carrier's male header pins pushed fully into the sandwich's female connector" loading="lazy">
@@ -411,6 +412,7 @@
           <tr><td>DS1 · DS2</td><td class="qty">2</td><td class="val">640×180</td><td>LILYGO T-Display-S3 Long</td><td>ESP32-S3 AMOLED bars — butted into one strip</td></tr>
           <tr><td>U1</td><td class="qty">1</td><td class="val">2×18 M</td><td>PinHeader 2.54 mm (2 rows)</td><td>Male header — plugs down into the sandwich</td></tr>
           <tr><td>JA · JB</td><td class="qty">2</td><td class="val">1×5</td><td>PinHeader 2.54 mm</td><td>Cable to each panel · +5V·GND·TX·RX·RST</td></tr>
+          <tr><td>J_MIDI</td><td class="qty">1</td><td class="val">2×3 IDC</td><td>PinHeader 2.54 mm</td><td>MIDI-board ribbon in — distributed down via U1</td></tr>
           <tr><td>J_PWR</td><td class="qty">1</td><td class="val">2-pos</td><td>5.08 mm screw terminal</td><td>Dedicated +5 V from the PSU</td></tr>
           <tr><td>H1–H4</td><td class="qty">4</td><td class="val">M2.5 · ~23 mm</td><td>brass hex standoff</td><td>Corner legs — carry the board level</td></tr>
           <tr><td>—</td><td class="qty">8</td><td class="val">M1.6</td><td>screw + short standoff</td><td>Fix each panel to the carrier (4 per panel)</td></tr>
