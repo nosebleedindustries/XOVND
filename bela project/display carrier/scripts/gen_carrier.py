@@ -18,22 +18,22 @@ PARTS = {
     "DS1": ("TDisplayS3Long",  "T-Display-S3-Long", "",            55.0,  25.0,  90),
     "DS2": ("TDisplayS3Long",  "T-Display-S3-Long", "",           143.8,  25.0, 270),
     "U1":  ("PB2",             "PocketBeagle2",     "PB2 stack",  165.0,  62.0,   0),  # sandwich at the RIGHT edge -> Bela audio jacks reach a free edge
-    "JA":  ("PinSocket_1x05_P2.54mm_Vertical", "DISP_A", "1x5-F",   55.0,  43.0,   0),  # FEMALE socket on F.Cu (gap below DS1) -> panel A plugs in (pwr+data)
-    "JB":  ("PinSocket_1x05_P2.54mm_Vertical", "DISP_B", "1x5-F",  120.0,  43.0,   0),  # FEMALE socket on F.Cu (gap below DS2, LEFT of U1) -> panel B plugs in (pwr+data)
+    "JA":  ("PinSocket_2x15_P1.27mm_Vertical", "DISP_A", "P5-2x15",  61.0, 30.7,  90),  # socket pad-centre = the ACTUAL H685 P5 body (verified in STEP at 69.9,31.3)
+    "JB":  ("PinSocket_2x15_P1.27mm_Vertical", "DISP_B", "P5-2x15", 137.8, 19.3, 270),  # socket pad-centre = the ACTUAL H685 P5 body (verified in STEP at 128.9,18.7)
     "J_PWR":("TerminalBlock_bornier-2_P5.08mm","PWR_IN","+5V/GND", 16.0,  64.0,   0),  # dedicated 5V from the main PSU
     "J_MIDI":("PinHeader_2x03_P2.54mm_Vertical","MIDI_HUB","2x3-IDC", 60.0, 79.0, 0),  # MIDI-board ribbon plugs in here; distributed down via U1
 }
 # JA/JB pin order: 1=+5V 2=GND 3=TX 4=RX 5=RST  ·  J_PWR: 1=+5V 2=GND
 # Displays powered from J_PWR (NOT the Beagle rail); PB2 sandwich carries only GND + data.
 NETS = {
-    "+5V":    [("J_PWR","1"),("JA","1"),("JB","1")],
-    "GND":    [("J_PWR","2"),("U1","P1.16"),("U1","P2.15"),("JA","2"),("JB","2"),("J_MIDI","2"),("J_MIDI","5")],  # common GND: PSU + Beagle + panels + MIDI
-    "DA_TX":  [("U1","P1.29"),("JA","3")],   # PRU0.7 -> panel A
-    "DA_RX":  [("U1","P1.31"),("JA","4")],   # PRU0.4 <- panel A
-    "DA_RST": [("U1","P1.4"),("JA","5")],    # GPIO89
-    "DB_TX":  [("U1","P2.28"),("JB","3")],   # PRU1.15 -> panel B
-    "DB_RX":  [("U1","P2.30"),("JB","4")],   # PRU1.12 <- panel B
-    "DB_RST": [("U1","P2.33"),("JB","5")],   # GPIO52
+    "+5V":    [("J_PWR","1"),("JA","27"),("JB","27")],   # VBUS -> both panels via P5 pin 27
+    # JA/JB = the P5 2x15 socket (30 pads). Wire only what the panel needs, on the real P5 pins:
+    #   +5V=pad27(VBUS)  GND=pads1,2  TX(U0RXD)=pad18  RX(U0TXD)=pad16  (RST not on P5 -> dropped)
+    "GND":    [("J_PWR","2"),("U1","P1.16"),("U1","P2.15"),("JA","1"),("JA","2"),("JB","1"),("JB","2"),("J_MIDI","2"),("J_MIDI","5")],
+    "DA_TX":  [("U1","P1.29"),("JA","18")],   # PRU0.7 -> panel A U0RXD
+    "DA_RX":  [("U1","P1.31"),("JA","16")],   # PRU0.4 <- panel A U0TXD
+    "DB_TX":  [("U1","P2.28"),("JB","18")],   # PRU1.15 -> panel B U0RXD
+    "DB_RX":  [("U1","P2.30"),("JB","16")],   # PRU1.12 <- panel B U0TXD
     # --- MIDI-board ribbon, distributed DOWN to the Beagle via U1. UART4 (P2.5/7) is taken by the
     #     Bela's audio, so MIDI RX/TX land on free Beagle pins (soft-serial, like the displays). ---
     "+3V3":     [("J_MIDI","1"),("U1","P2.23")],   # Beagle 3.3V rail -> MIDI board

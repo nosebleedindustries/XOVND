@@ -16,10 +16,13 @@ the sandwich (asymmetric). `JB` moved to x≈110 to clear the shifted U1.
 
 **`U1` = MALE 2×18 pin headers** (`PinHeader_2x18_P2.54mm_Vertical` ×2), pins pointing
 **down** so the carrier plugs into female sockets on top of the sandwich — you can't
-mate two female sockets. `JA`/`JB` are now **FEMALE 1×5 sockets on the FRONT (`F.Cu`, display side)** — each display
-plugs straight into its socket for **power + data** (`+5V·GND·TX·RX·RST`), no cable. They sit in
-the gap just below each display; `JB` is offset left to clear the edge-shifted `U1`. Socket
-position should be matched to the LILYGO module's actual breakout header.
+mate two female sockets. `JA`/`JB` are **FEMALE 2×15 P1.27 mm sockets on the FRONT (`F.Cu`, display side)**
+that **mirror the LILYGO module's own `P5` 30-pin breakout** — each display plugs straight down into its
+socket for **power + data** (`+5V` on P5 pin 27 · `GND` · `TX` · `RX`), no cable. Each socket's pad-centre is
+placed **coincident with the module's factory `P5` connector**, verified in the exported STEP (socket centre =
+`P5` body centre to ±0.1 mm): DS1 `P5` at (69.9, 31.3), DS2 `P5` at (128.9, 18.7) — so the male `P5` inserts
+into the socket receptacle and the panel seats at its true height. (The two sockets sit at opposite ends of
+their panels because the modules are mirror-mounted — `P5` is off-centre on the module.)
 The `ensemble_*` renders show the full stack aligned + sandwiched: `U1` sits over the
 Beagle's P1/P2 headers and its pins insert into the sandwich; the MIDI board is the
 ribbon satellite in front.
@@ -27,7 +30,7 @@ ribbon satellite in front.
 - The panels are **smart satellites** — each ESP32 renders its own graphics, so the
   carrier only carries **power + a PRU-serial link** to each (Bela Gem leaves no HW
   UART/SPI free — see `../docs/display-architecture.md`). PRU0→panel A, PRU1→panel B.
-- `JA` / `JB` (1×5): `+5V · GND · TX · RX · RST` — the cable to each panel plugs here.
+- `JA` / `JB` (2×15 P1.27 mm, = LILYGO `P5`): the panel plugs straight in — `+5V`(P5 pin 27) `· GND · TX · RX`.
 - Displays are **mounted mirror-symmetric** (USB-C/electronics outward, screens meeting
   in the middle) for a continuous face. Module = **27.2 × 88.8 × 11.1 mm** (factory STEP).
 
